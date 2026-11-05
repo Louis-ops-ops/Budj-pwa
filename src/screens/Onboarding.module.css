@@ -1,0 +1,245 @@
+/* First launch setup: centered card, 3 steps. */
+.screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--space-32);
+  background: var(--bg-brand-subtle);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  width: var(--layout-onboarding);
+  max-height: 100%;
+  padding: var(--space-32);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-elevated);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  color: var(--text-brand-deep);
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--text-secondary);
+}
+
+.dots {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.dot {
+  width: var(--layout-dot);
+  height: var(--layout-dot);
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-strong);
+}
+
+.dotActive {
+  background: var(--bg-accent);
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: calc(-1 * var(--space-4));
+  padding: var(--space-4);
+}
+
+.headRow,
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.headRow {
+  color: var(--text-secondary);
+}
+
+.colGrow {
+  flex: 1;
+  min-width: 0;
+}
+
+.colAmount {
+  width: calc(var(--layout-col-amount) - var(--space-24));
+  flex-shrink: 0;
+}
+
+.colDay {
+  width: calc(var(--layout-control) * 2);
+  flex-shrink: 0;
+}
+
+.colColor {
+  width: var(--layout-control);
+  flex-shrink: 0;
+}
+
+.colAction {
+  width: var(--layout-chip);
+  flex-shrink: 0;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  height: var(--layout-control);
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-sm);
+  border: var(--layout-border) solid var(--border-brand-subtle);
+  background: var(--bg-surface);
+}
+
+.box:focus-within {
+  border-color: var(--border-brand);
+  box-shadow: 0 0 0 calc(var(--layout-focus-ring) - var(--layout-border)) var(--border-brand);
+}
+
+.boxInvalid {
+  border-color: var(--icon-danger);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-body);
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-secondary);
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.select option {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.suffix {
+  color: var(--text-secondary);
+}
+
+.colorButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  border-radius: var(--radius-full);
+}
+
+.colorDot {
+  width: calc(var(--layout-chip) - var(--space-4));
+  height: calc(var(--layout-chip) - var(--space-4));
+  border-radius: var(--radius-full);
+  background: var(--swatch-bg);
+  border: var(--layout-focus-ring) solid var(--swatch-fg);
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+  color: var(--text-brand-deep);
+}
+
+.summaryNegative {
+  background: var(--feedback-danger-bg);
+  color: var(--feedback-danger-fg);
+}
+
+.error {
+  color: var(--text-danger);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.footerButtons {
+  display: flex;
+  gap: var(--space-12);
+  margin-left: auto;
+}
+
+.help {
+  text-align: center;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 1023px) {
+  .screen {
+    align-items: stretch;
+    padding: 0;
+    background: var(--bg-surface);
+  }
+
+  .card {
+    width: 100%;
+    max-height: none;
+    padding: calc(var(--safe-top) + var(--space-24)) var(--layout-screen-margin)
+      max(var(--safe-bottom), var(--space-24));
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .body {
+    flex: 1;
+  }
+
+  .headRow {
+    display: none;
+  }
+
+  .line {
+    flex-wrap: wrap;
+  }
+
+  .line > :first-child {
+    flex: 1 1 100%;
+  }
+}

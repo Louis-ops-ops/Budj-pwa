@@ -1,0 +1,182 @@
+/* Common screen template (CLAUDE.md §6.1). */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: var(--space-32) var(--space-32) 0;
+}
+
+.mobilePage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: calc(var(--safe-top) + var(--layout-screen-top)) var(--layout-screen-margin)
+    var(--space-16);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-24);
+  flex-shrink: 0;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  flex-shrink: 0;
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-32);
+  flex: 1;
+  min-height: 0;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  flex: 1;
+  min-width: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-bottom: var(--space-32);
+  /* Room for focus rings on the scroll edges. */
+  margin: calc(-1 * var(--space-4));
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+  padding-top: var(--space-4);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: var(--layout-aside);
+  flex-shrink: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-bottom: var(--space-32);
+}
+
+.asideWide {
+  width: var(--layout-aside-wide);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--space-32);
+  border-radius: var(--radius-lg);
+  border: var(--layout-border) solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.cardCompact {
+  gap: var(--space-12);
+  padding: var(--space-24);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding-bottom: var(--space-4);
+}
+
+.sectionTitles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+@media (max-width: 1023px) {
+  .page {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    padding: calc(var(--safe-top) + var(--space-24)) var(--layout-screen-margin) var(--space-24);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-16);
+    margin-bottom: var(--space-24);
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-24);
+  }
+
+  .main {
+    flex: none;
+    gap: var(--space-24);
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .aside,
+  .asideWide {
+    width: 100%;
+    max-height: none;
+    padding-bottom: 0;
+    overflow: visible;
+  }
+
+  .card {
+    gap: var(--space-16);
+    padding: var(--space-24);
+  }
+
+  .sectionHeader {
+    flex-wrap: wrap;
+  }
+}
+
+.mobilePage > * {
+  flex-shrink: 0;
+}

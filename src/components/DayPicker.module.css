@@ -1,0 +1,19 @@
+.row {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.day {
+  width: var(--layout-control);
+  height: var(--layout-control);
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+}
+
+.selected {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}

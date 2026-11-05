@@ -1,0 +1,181 @@
+/* Figma: Web/Ligne dépense (284:1490) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  min-height: var(--layout-row-expense);
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-md);
+  border: var(--layout-border-strong) solid transparent;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.outlined.selected {
+  border-color: var(--border-brand);
+}
+
+.row:hover,
+.row:focus-within,
+.selected {
+  background: var(--bg-brand-subtle);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-18);
+  height: var(--space-18);
+  flex-shrink: 0;
+  border-radius: var(--radius-xs);
+  border: var(--layout-border-strong) solid var(--border-brand);
+  background: var(--bg-surface);
+  color: var(--icon-on-accent);
+}
+
+.checked {
+  background: var(--bg-accent);
+}
+
+.tick {
+  width: var(--space-6);
+  height: var(--space-10);
+  margin-top: calc(-1 * var(--space-2));
+  border: solid var(--icon-on-accent);
+  border-width: 0 var(--layout-focus-ring) var(--layout-focus-ring) 0;
+  transform: rotate(45deg);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.texts > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--text-primary);
+}
+
+.detail {
+  color: var(--detail-color, var(--text-secondary));
+}
+
+.date {
+  width: var(--layout-col-date);
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.payment {
+  width: var(--layout-col-amount-compact);
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.amount {
+  width: var(--layout-col-money);
+  flex-shrink: 0;
+  text-align: right;
+  color: var(--amount-color);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: var(--layout-col-actions);
+  flex-shrink: 0;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity var(--motion-fast) ease;
+}
+
+.row:hover .actions,
+.row:focus-within .actions {
+  opacity: 1;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-chip);
+  height: var(--layout-chip);
+  border-radius: var(--radius-full);
+  background: var(--bg-icon-button);
+  border: var(--layout-border) solid var(--border-brand);
+  color: var(--icon-brand);
+}
+
+.action:hover {
+  background: var(--bg-nav-action);
+}
+
+.actionDanger {
+  color: var(--icon-danger);
+}
+
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .row {
+    gap: var(--space-12);
+    padding: var(--space-10) var(--space-8);
+  }
+
+  .date,
+  .payment,
+  .actions {
+    display: none;
+  }
+
+  .amount {
+    width: auto;
+  }
+}
+
+@media (max-width: 1023px) {
+  .detail {
+    font-size: var(--font-size-caption);
+    line-height: var(--line-height-caption);
+  }
+}
+
+@media (max-width: 1023px) {
+  .check {
+    width: var(--space-24);
+    height: var(--space-24);
+    border-radius: var(--radius-full);
+    border-color: var(--border-brand-subtle);
+  }
+
+  .tick {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .row {
+    padding: var(--space-4) 0;
+    min-height: var(--layout-control);
+    border: none;
+  }
+}

@@ -1,0 +1,41 @@
+/* Figma: Bouton icône (187:4) — 32 px visual, 44 px hit area. */
+.hit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  margin: calc((var(--layout-chip) - var(--layout-control)) / 2);
+  border-radius: var(--radius-full);
+}
+
+.visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-chip);
+  height: var(--layout-chip);
+  border-radius: var(--radius-full);
+  background: var(--bg-icon-button);
+  border: var(--layout-border) solid var(--border-brand);
+  color: var(--icon-brand);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.hit:hover .visual {
+  background: var(--bg-nav-action);
+}
+
+.danger .visual {
+  color: var(--icon-danger);
+  border-color: var(--icon-danger);
+}
+
+.hit:focus-visible {
+  outline: none;
+}
+
+.hit:focus-visible .visual {
+  outline: var(--layout-focus-ring) solid var(--border-brand);
+  outline-offset: var(--layout-focus-ring);
+}

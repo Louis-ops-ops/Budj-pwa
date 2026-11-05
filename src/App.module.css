@@ -1,0 +1,11 @@
+.shell {
+  display: flex;
+  height: 100%;
+  background: var(--bg-app);
+}
+
+@media (max-width: 1023px) {
+  .shell {
+    flex-direction: column;
+  }
+}

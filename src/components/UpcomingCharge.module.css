@@ -1,0 +1,47 @@
+/* Figma: Web/Prélèvement à venir (280:1612) */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--layout-row-upcoming);
+  padding: var(--space-12) var(--space-16) var(--space-12) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+  border: var(--layout-border-strong) solid transparent;
+}
+
+.highlighted {
+  background: var(--bg-surface);
+  border-color: var(--border-brand);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  color: var(--text-primary);
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.highlighted .amount,
+.highlighted .due {
+  color: var(--text-brand);
+}
+
+.due {
+  color: var(--text-tertiary);
+}

@@ -1,0 +1,61 @@
+/* Figma: Bouton (185:1970) */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  min-height: var(--layout-control);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition:
+    background-color var(--motion-fast) ease,
+    opacity var(--motion-fast) ease,
+    filter var(--motion-fast) ease;
+}
+
+.primary {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-medium);
+}
+
+.primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.secondary {
+  background: var(--bg-brand-subtle);
+  border: var(--layout-border) solid var(--border-brand);
+  color: var(--text-brand);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-regular);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--bg-brand-muted);
+}
+
+.danger {
+  background: var(--bg-danger);
+  color: var(--text-on-accent);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-medium);
+}
+
+.danger:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.button:disabled {
+  opacity: var(--disabled-opacity);
+  cursor: default;
+}

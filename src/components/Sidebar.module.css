@@ -1,0 +1,94 @@
+/* Figma: Web/Barre latérale (270:15) and Web/Élément de navigation (270:14) */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  width: var(--layout-sidebar);
+  flex-shrink: 0;
+  height: 100%;
+  padding: var(--space-32) var(--space-16) var(--space-24);
+  background: var(--bg-brand-subtle);
+}
+
+.brand {
+  padding: 0 var(--space-8);
+  color: var(--text-brand-deep);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  height: var(--layout-control);
+  padding: var(--space-10) var(--space-16);
+  border: var(--layout-border-strong) solid transparent;
+  border-radius: var(--radius-full);
+  color: var(--text-brand-deep);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.item:hover,
+.item:focus-visible {
+  background: var(--bg-nav-action);
+}
+
+.item.active {
+  background: var(--bg-nav-active);
+  border-color: var(--border-brand);
+  color: var(--text-brand-strong);
+  font-weight: var(--font-weight-bold);
+}
+
+.item .icon {
+  color: var(--icon-primary);
+}
+
+.item.active .icon {
+  color: var(--icon-brand);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.storage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.dot {
+  width: var(--layout-dot);
+  height: var(--layout-dot);
+  border-radius: var(--radius-full);
+  background: var(--feedback-success-fg);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
+  }
+}

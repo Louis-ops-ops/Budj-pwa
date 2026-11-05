@@ -1,0 +1,29 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-avatar);
+  height: var(--layout-avatar);
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid transparent;
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-bold);
+}
+
+.avatar {
+  background: var(--avatar-bg);
+  color: var(--avatar-fg);
+}
+
+.outlined {
+  border-color: var(--border-brand-subtle);
+}
+
+.uncategorized {
+  background: var(--bg-sheet);
+  color: var(--text-tertiary);
+  border-color: var(--border-brand-subtle);
+  border-style: dashed;
+}

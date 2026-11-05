@@ -1,0 +1,33 @@
+.track {
+  position: relative;
+  width: 100%;
+  height: var(--gauge-height, var(--layout-gauge));
+  border-radius: var(--radius-full);
+  background: var(--gauge-track, var(--bg-surface));
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--ratio) * 100%);
+  border-radius: var(--radius-full);
+  background: var(--gauge-fill);
+  transition: width var(--motion-base) ease;
+}
+
+.stacked {
+  display: flex;
+  gap: var(--space-4);
+  width: 100%;
+  height: var(--layout-gauge-strong);
+}
+
+.segment {
+  height: 100%;
+  border-radius: var(--radius-full);
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  transition: flex-basis var(--motion-base) ease;
+}

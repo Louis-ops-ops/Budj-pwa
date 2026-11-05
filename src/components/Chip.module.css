@@ -1,0 +1,55 @@
+/* Figma: Chip catégorie (205:261), Chip nouvelle catégorie (205:262) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: var(--layout-chip);
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid transparent;
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.chip:hover {
+  border-color: var(--chip-fg);
+}
+
+.selected {
+  background: var(--chip-fg);
+  color: var(--text-on-accent);
+}
+
+:global([data-theme='dark']) .selected {
+  color: var(--chip-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :global([data-theme='system']) .selected {
+    color: var(--chip-bg);
+  }
+}
+
+.add {
+  border: var(--layout-border) dashed var(--border-brand-subtle);
+  background: transparent;
+  color: var(--text-brand);
+  gap: var(--space-4);
+}
+
+.add:hover {
+  border-color: var(--border-brand);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}

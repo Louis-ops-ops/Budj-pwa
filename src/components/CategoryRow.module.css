@@ -1,0 +1,115 @@
+/* Figma: Web/Ligne catégorie (280:1599) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+  width: 100%;
+  min-height: var(--layout-row-category);
+  padding: var(--space-16) var(--space-16) var(--space-16) var(--space-24);
+  border: var(--layout-border-strong) solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--row-bg);
+  color: var(--row-fg);
+  text-align: left;
+  transition: border-color var(--motion-fast) ease;
+}
+
+button.row:hover,
+button.row:focus-visible {
+  border-color: var(--row-fg);
+  outline: none;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: var(--layout-col-name);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.identity > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  flex: 1;
+  min-width: 0;
+}
+
+.remaining {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  width: var(--layout-col-amount);
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.over .remaining {
+  color: var(--text-danger);
+}
+
+.compact .identity {
+  flex: 1;
+  width: auto;
+}
+
+.chevron {
+  opacity: 0;
+  transition: opacity var(--motion-fast) ease;
+}
+
+button.row:hover .chevron,
+button.row:focus-visible .chevron {
+  opacity: 1;
+}
+
+/* Narrow main column (1280 px window): tighter columns. */
+@container (max-width: 700px) {
+  .row {
+    gap: var(--space-16);
+  }
+
+  .identity {
+    width: var(--layout-col-name-compact);
+  }
+
+  .remaining {
+    width: var(--layout-col-amount-compact);
+  }
+}
+
+@media (max-width: 1023px) {
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-8) var(--space-12);
+    padding: var(--space-16);
+  }
+
+  .identity {
+    width: auto;
+  }
+
+  .remaining {
+    width: auto;
+  }
+
+  .progress {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .chevron {
+    display: none;
+  }
+}

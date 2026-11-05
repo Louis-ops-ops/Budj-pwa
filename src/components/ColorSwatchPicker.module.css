@@ -1,0 +1,85 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.group {
+  display: flex;
+  gap: var(--space-16);
+}
+
+.ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-swatch-ring);
+  height: var(--layout-swatch-ring);
+  border-radius: var(--radius-full);
+  border: var(--layout-focus-ring) solid transparent;
+}
+
+.selected {
+  border-color: var(--swatch-fg);
+}
+
+.swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-swatch);
+  height: var(--layout-swatch);
+  border-radius: var(--radius-full);
+  background: var(--swatch-bg);
+  border: var(--layout-focus-ring) solid var(--swatch-fg);
+}
+
+/* The custom swatch shows the rainbow until a hue is picked, then the hue itself. */
+.customSwatch {
+  background: var(--wheel);
+}
+
+.customInner {
+  width: calc(var(--layout-swatch) - var(--space-12));
+  height: calc(var(--layout-swatch) - var(--space-12));
+  border-radius: var(--radius-full);
+  background: var(--swatch-bg);
+  border: var(--layout-focus-ring) solid var(--swatch-fg);
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.sliderHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.range {
+  appearance: none;
+  width: 100%;
+  height: var(--layout-gauge-strong);
+  border-radius: var(--radius-full);
+  background: var(--track);
+  cursor: pointer;
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: calc(var(--layout-chip) - var(--space-4));
+  height: calc(var(--layout-chip) - var(--space-4));
+  border-radius: var(--radius-full);
+  background: var(--thumb);
+  border: var(--space-4) solid var(--bg-surface);
+  box-shadow: var(--shadow-light);
+}
+
+.range:focus-visible {
+  outline: var(--layout-focus-ring) solid var(--border-brand);
+  outline-offset: var(--space-4);
+}

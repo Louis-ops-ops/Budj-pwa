@@ -1,0 +1,109 @@
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/500.css';
+@import '@fontsource/outfit/600.css';
+@import '@fontsource/outfit/700.css';
+@import './tokens.css';
+@import './typography.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  height: 100dvh;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--text-primary);
+  background: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+select {
+  user-select: text;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+@media (hover: none) {
+  button:active:not(:disabled),
+  a:active {
+    opacity: var(--pressed-opacity);
+  }
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: var(--layout-focus-ring) solid var(--border-brand);
+  outline-offset: var(--layout-focus-ring);
+}
+
+/* Thin scrollbars that follow the theme. */
+::-webkit-scrollbar {
+  width: var(--space-8);
+  height: var(--space-8);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-strong);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-brand-subtle);
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

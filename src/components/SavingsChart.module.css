@@ -1,0 +1,169 @@
+/* Figma: Graphique 12 mois (289:2131) — bars at exact scale. */
+.chart {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.bars {
+  display: flex;
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-8) 0;
+  border-radius: var(--radius-md);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.column:hover {
+  background: var(--bg-app);
+}
+
+.selected,
+.selected:hover {
+  background: var(--bg-brand-subtle);
+}
+
+.positive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  width: 100%;
+  height: var(--layout-chart-positive);
+}
+
+.negative {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  height: var(--layout-chart-negative);
+}
+
+.axis {
+  width: 100%;
+  height: var(--layout-border);
+  background: var(--border-brand-subtle);
+}
+
+.bar {
+  width: var(--layout-chart-bar);
+  min-height: var(--layout-chart-bar-min);
+  transition: height var(--motion-base) ease;
+}
+
+.barUp {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: var(--bg-brand-strong);
+  /* Room left for the value label above the bar. */
+  height: calc(var(--ratio) * (var(--layout-chart-positive) - var(--line-height-label) - var(--space-4)));
+}
+
+.barDown {
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background: var(--feedback-danger-bg);
+  height: min(
+    calc(var(--ratio) * (var(--layout-chart-positive) - var(--line-height-label) - var(--space-4))),
+    calc(var(--layout-chart-negative) - var(--line-height-label) - var(--space-4))
+  );
+}
+
+.selected .barUp {
+  background: var(--bg-accent);
+}
+
+.value {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.valueDown {
+  color: var(--text-danger);
+}
+
+.selected .value:not(.valueDown) {
+  color: var(--text-brand);
+  font-weight: var(--font-weight-bold);
+}
+
+.month {
+  color: var(--text-secondary);
+}
+
+.selected .month {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Narrow chart (1280 px window): smaller value labels so they do not overlap. */
+@container (max-width: 640px) {
+  .value {
+    font-size: var(--font-size-caption);
+    line-height: var(--line-height-caption);
+  }
+}
+
+@media (max-width: 1023px) {
+  .chart {
+    --layout-chart-positive: var(--layout-chart-positive-mobile);
+    --layout-chart-negative: var(--layout-chart-negative-mobile);
+  }
+
+  .column {
+    padding: 0 var(--space-4);
+  }
+
+  .selected,
+  .selected:hover {
+    background: transparent;
+  }
+
+  .axis {
+    display: none;
+  }
+
+  .bar {
+    width: 100%;
+  }
+
+  .barUp,
+  .barDown {
+    border-radius: var(--radius-sm);
+    opacity: var(--past-opacity);
+  }
+
+  .barUp {
+    background: var(--feedback-success-fg);
+  }
+
+  .barDown {
+    background: var(--text-danger);
+  }
+
+  .selected .barUp,
+  .selected .barDown {
+    opacity: 1;
+  }
+
+  .selected .barUp {
+    background: var(--feedback-success-fg);
+  }
+
+  .selected .value:not(.valueDown) {
+    color: var(--text-success);
+  }
+}
+
+@media (max-width: 1023px) {
+  .bar {
+    max-width: var(--layout-chart-bar-max);
+  }
+}

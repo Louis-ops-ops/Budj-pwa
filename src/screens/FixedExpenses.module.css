@@ -1,0 +1,127 @@
+/* Figma: Web — Dépenses fixes v2 (287:1648) */
+.amountLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-16);
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.legendDot {
+  width: var(--layout-legend-dot);
+  height: var(--layout-legend-dot);
+  border-radius: var(--radius-full);
+}
+
+.counter {
+  margin-left: auto;
+  color: var(--text-secondary);
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8);
+  border-radius: var(--radius-lg);
+  border: var(--layout-border) solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-16);
+  padding: var(--space-8) var(--space-12);
+  color: var(--text-secondary);
+}
+
+.headLogo {
+  width: var(--layout-avatar);
+  flex-shrink: 0;
+}
+
+.headName {
+  flex: 1;
+}
+
+.headDay {
+  width: var(--layout-col-day);
+  flex-shrink: 0;
+}
+
+.headStatus {
+  width: var(--layout-col-status);
+  flex-shrink: 0;
+}
+
+.headMonthly {
+  width: var(--layout-col-monthly);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.headYearly {
+  width: var(--layout-col-money);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.headAction {
+  width: var(--layout-chip);
+  flex-shrink: 0;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-16) var(--space-12) var(--space-6);
+}
+
+.calendarHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dayTitle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dayList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+@media (max-width: 1023px) {
+  .amountLine {
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-12);
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: var(--space-8) var(--space-16);
+  }
+
+  .head {
+    display: none;
+  }
+
+  .group {
+    padding: var(--space-16) var(--space-8) var(--space-6);
+  }
+}

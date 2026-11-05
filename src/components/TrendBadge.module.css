@@ -1,0 +1,27 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid;
+  white-space: nowrap;
+}
+
+.positive {
+  background: var(--feedback-success-bg);
+  border-color: var(--feedback-success-fg);
+  color: var(--feedback-success-fg);
+}
+
+.negative {
+  background: var(--feedback-danger-bg);
+  border-color: var(--feedback-danger-fg);
+  color: var(--feedback-danger-fg);
+}
+
+.neutral {
+  background: var(--bg-app);
+  border-color: var(--border-brand);
+  color: var(--text-brand-strong);
+}

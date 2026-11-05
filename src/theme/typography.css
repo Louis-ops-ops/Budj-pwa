@@ -1,0 +1,88 @@
+/* Text styles (Figma: Fondations > Typographie). */
+
+.t-display-xl {
+  font-size: var(--font-size-display-xl);
+  line-height: var(--line-height-display-xl);
+  font-weight: var(--font-weight-medium);
+}
+.t-display-l {
+  font-size: var(--font-size-display-l);
+  line-height: var(--line-height-display-l);
+  font-weight: var(--font-weight-bold);
+}
+.t-display-m {
+  font-size: var(--font-size-display-m);
+  line-height: var(--line-height-display-m);
+  font-weight: var(--font-weight-medium);
+}
+.t-h1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-bold);
+}
+.t-h2 {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-semibold);
+}
+.t-h3 {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-medium);
+}
+.t-body-regular,
+.t-body-medium,
+.t-body-bold {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+.t-body-regular {
+  font-weight: var(--font-weight-regular);
+}
+.t-body-medium {
+  font-weight: var(--font-weight-medium);
+}
+.t-body-bold {
+  font-weight: var(--font-weight-bold);
+}
+.t-label-regular,
+.t-label-medium,
+.t-label-bold {
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+}
+.t-label-regular {
+  font-weight: var(--font-weight-regular);
+}
+.t-label-medium {
+  font-weight: var(--font-weight-medium);
+}
+.t-label-bold {
+  font-weight: var(--font-weight-bold);
+}
+.t-caption-medium {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1023px) {
+  .t-display-xl {
+    font-size: min(var(--font-size-display-xl), var(--display-xl-fluid));
+    line-height: 1;
+  }
+
+  .t-display-l {
+    font-size: min(var(--font-size-display-l), var(--display-l-fluid));
+    line-height: 1;
+  }
+
+  .t-display-m {
+    font-size: min(var(--font-size-display-m), var(--display-m-fluid));
+    line-height: 1;
+  }
+}

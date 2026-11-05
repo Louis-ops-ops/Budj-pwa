@@ -1,0 +1,10 @@
+// Figma: Icône (185:1954)
+import type { SVGProps } from 'react'
+
+export function MoveIcon(props: SVGProps<SVGSVGElement>): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M18.65 13H6.5V11H18.65L17.1 9.45L18.5 8L22.5 12L18.5 16L17.1 14.55L18.65 13ZM13.5 9V5H3.5V19H13.5V15H15.5V19C15.5 19.55 15.3042 20.0208 14.9125 20.4125C14.5208 20.8042 14.05 21 13.5 21H3.5C2.95 21 2.47917 20.8042 2.0875 20.4125C1.69583 20.0208 1.5 19.55 1.5 19V5C1.5 4.45 1.69583 3.97917 2.0875 3.5875C2.47917 3.19583 2.95 3 3.5 3H13.5C14.05 3 14.5208 3.19583 14.9125 3.5875C15.3042 3.97917 15.5 4.45 15.5 5V9H13.5Z" />
+    </svg>
+  )
+}

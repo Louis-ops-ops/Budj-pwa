@@ -1,0 +1,341 @@
+/* Mobile screens (Figma: page Design 2:141, reference 393 × 852). */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.spread {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-top: var(--space-8);
+}
+
+.headActions {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.amount {
+  white-space: nowrap;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+/* Category and fixed cards of the home screen */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--card-fg);
+  text-align: left;
+}
+
+.fixedLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  color: var(--text-brand-subtle);
+}
+
+.cardRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.cardRow > .spread {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.deleteIcon {
+  color: var(--icon-danger);
+}
+
+.primaryText {
+  color: var(--text-primary);
+}
+
+.dangerText {
+  color: var(--text-danger);
+}
+
+.settings {
+  align-self: center;
+}
+
+/* Hero card of a category and of the fixed expenses */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  background: var(--hero-bg);
+  color: var(--hero-fg);
+}
+
+.amountLine {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-10);
+  white-space: nowrap;
+}
+
+.gaugeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.gaugeRow > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.pace {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-12);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-12);
+  padding-top: var(--space-4);
+}
+
+.splitItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Fixed expenses */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.flatList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fixedItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--layout-row-expense);
+  text-align: left;
+}
+
+.fixedTexts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.fixedTexts > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendarCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-elevated);
+}
+
+.calendarTitle {
+  text-align: center;
+}
+
+.calendarTitle::first-letter {
+  text-transform: uppercase;
+}
+
+.floating {
+  position: sticky;
+  bottom: 0;
+  align-self: center;
+  margin-top: auto;
+}
+
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.shareBar {
+  display: flex;
+  gap: var(--space-2);
+  height: var(--layout-gauge);
+}
+
+.shareBar > span {
+  min-width: var(--space-2);
+  border-radius: var(--radius-xs);
+}
+
+.shareLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-12);
+}
+
+.shareItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.shareDot {
+  width: var(--layout-legend-dot);
+  height: var(--layout-legend-dot);
+  border-radius: var(--radius-xs);
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--layout-row-expense);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-muted);
+  color: var(--text-brand-deep);
+  text-align: left;
+}
+
+.bannerText {
+  flex: 1;
+  min-width: 0;
+}
+
+.chipScroll {
+  display: flex;
+  gap: var(--space-8);
+  margin: 0 calc(-1 * var(--layout-screen-margin));
+  padding: 0 var(--layout-screen-margin);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chipScroll > * {
+  flex-shrink: 0;
+}
+
+.chartCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  border: var(--layout-border-strong) solid var(--feedback-success-fg);
+  background: var(--bg-surface);
+}
+
+.monthCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  width: 100%;
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+  text-align: left;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.compareCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--card-fg);
+}
+
+.heroAmount {
+  font-weight: var(--font-weight-medium);
+}

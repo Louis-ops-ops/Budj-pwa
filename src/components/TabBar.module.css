@@ -1,0 +1,61 @@
+/* Figma: Nav bar (187:1482) */
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+  flex-shrink: 0;
+  padding: var(--space-12) var(--layout-screen-margin)
+    max(var(--safe-bottom), var(--layout-screen-margin));
+  background: var(--bg-app);
+}
+
+.add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid var(--border-brand);
+  background: var(--bg-nav-action);
+  color: var(--icon-brand);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+  height: var(--layout-control);
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-full);
+  background: var(--bg-nav-action);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-width: var(--layout-control);
+  height: var(--layout-control);
+  color: var(--icon-brand);
+  text-decoration: none;
+}
+
+.active {
+  height: calc(var(--layout-control) - var(--space-16));
+  padding: 0 var(--space-10);
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid var(--border-brand);
+  background: var(--bg-nav-active);
+  color: var(--text-brand-strong);
+}
+
+@media (min-width: 1024px) {
+  .container {
+    display: none;
+  }
+}

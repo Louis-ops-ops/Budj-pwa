@@ -1,0 +1,69 @@
+/* AmountInput: Display/XL amount, 3 px accent cursor, € in Display/M. */
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  width: 100%;
+  color: var(--text-primary);
+  cursor: text;
+}
+
+.compact .value {
+  font-size: var(--font-size-display-m);
+  line-height: var(--line-height-display-m);
+}
+
+.compact .currency {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+}
+
+.compact .cursor {
+  height: var(--line-height-display-m);
+}
+
+.value {
+  white-space: nowrap;
+}
+
+.empty {
+  color: var(--text-secondary);
+}
+
+.cursor {
+  width: var(--layout-cursor);
+  height: calc(var(--line-height-display-xl) - var(--space-16));
+  background: var(--bg-accent);
+  opacity: 0;
+}
+
+.wrapper:focus-within .cursor {
+  opacity: 1;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+.currency {
+  color: var(--text-secondary);
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: text;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper:focus-within .cursor {
+    animation: none;
+  }
+}

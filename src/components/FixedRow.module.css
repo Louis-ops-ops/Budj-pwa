@@ -1,0 +1,91 @@
+/* Figma: Web/Ligne fixe (284:1555) */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  min-height: var(--layout-row-expense);
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-md);
+  transition: background-color var(--motion-fast) ease;
+}
+
+.row:hover,
+.row:focus-within {
+  background: var(--bg-brand-subtle);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.texts > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail {
+  color: var(--text-secondary);
+}
+
+.day {
+  width: var(--layout-col-day);
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.status {
+  width: var(--layout-col-status);
+  flex-shrink: 0;
+}
+
+.pill {
+  display: inline-flex;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-full);
+  border: var(--layout-border) solid transparent;
+}
+
+.paid {
+  background: var(--feedback-success-bg);
+  color: var(--feedback-success-fg);
+}
+
+.upcoming {
+  background: var(--bg-surface);
+  border-color: var(--border-brand-subtle);
+  color: var(--text-brand);
+}
+
+.monthly {
+  width: var(--layout-col-monthly);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.yearly {
+  width: var(--layout-col-money);
+  flex-shrink: 0;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+.edit {
+  opacity: 0;
+  transition: opacity var(--motion-fast) ease;
+}
+
+.row:hover .edit,
+.row:focus-within .edit {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .edit {
+    opacity: 1;
+  }
+}
