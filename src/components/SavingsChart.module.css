@@ -115,55 +115,22 @@
   .chart {
     --layout-chart-positive: var(--layout-chart-positive-mobile);
     --layout-chart-negative: var(--layout-chart-negative-mobile);
+    --layout-chart-bar: var(--layout-chart-bar-mobile);
   }
 
   .column {
-    padding: 0 var(--space-4);
+    padding: 0;
   }
 
+  .column:hover,
   .selected,
   .selected:hover {
     background: transparent;
   }
 
-  .axis {
-    display: none;
-  }
-
-  .bar {
-    width: 100%;
-  }
-
-  .barUp,
-  .barDown {
-    border-radius: var(--radius-sm);
-    opacity: var(--past-opacity);
-  }
-
-  .barUp {
-    background: var(--feedback-success-fg);
-  }
-
-  .barDown {
-    background: var(--text-danger);
-  }
-
-  .selected .barUp,
-  .selected .barDown {
-    opacity: 1;
-  }
-
-  .selected .barUp {
-    background: var(--feedback-success-fg);
-  }
-
-  .selected .value:not(.valueDown) {
-    color: var(--text-success);
-  }
-}
-
-@media (max-width: 1023px) {
-  .bar {
-    max-width: var(--layout-chart-bar-max);
+  .value {
+    font-size: var(--font-size-label);
+    line-height: var(--line-height-label);
+    color: var(--text-tertiary);
   }
 }

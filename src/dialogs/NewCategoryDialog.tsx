@@ -58,10 +58,11 @@ export function NewCategoryDialog({
       onClose={onClose}
       onSubmit={submit}
       submitLabel="Créer la catégorie"
+      submitIcon={isMobile ? 'add' : undefined}
       submitDisabled={!trimmed || taken}
     >
       <div className={styles.group}>
-        <Text variant="label-medium" className={styles.groupLabel}>
+        <Text variant="label-medium" className={styles.groupLabelMuted}>
           Aperçu
         </Text>
         {isMobile ? (
@@ -137,7 +138,7 @@ export function NewCategoryDialog({
         <Gauge
           ratio={monthBudget > 0 ? allocated / monthBudget : 1}
           fill={rest < 0 ? 'bg-danger' : 'bg-accent'}
-          track="bg-brand-muted"
+          track={isMobile ? 'bg-brand-strong' : 'bg-brand-muted'}
         />
         <Text variant="label-regular" className={rest < 0 ? styles.warning : styles.note}>
           {rest > 0

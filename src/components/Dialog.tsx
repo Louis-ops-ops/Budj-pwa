@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from './Button'
+import type { IconName } from './Icon'
 import { IconButton } from './IconButton'
 import { Text } from './Text'
 import styles from './Dialog.module.css'
@@ -28,6 +29,7 @@ interface DialogProps {
   /** Called on Enter / primary button. */
   onSubmit?(): void
   submitLabel?: string
+  submitIcon?: IconName
   submitDisabled?: boolean
   submitVariant?: 'primary' | 'danger'
   cancelLabel?: string
@@ -44,6 +46,7 @@ export function Dialog({
   onClose,
   onSubmit,
   submitLabel,
+  submitIcon,
   submitDisabled,
   submitVariant = 'primary',
   cancelLabel = 'Annuler',
@@ -193,6 +196,7 @@ export function Dialog({
               {onSubmit && submitLabel && (
                 <Button
                   label={submitLabel}
+                  icon={submitIcon}
                   type="submit"
                   variant={submitVariant}
                   disabled={submitDisabled}

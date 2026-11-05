@@ -25,3 +25,8 @@
   border-color: var(--border-brand);
   color: var(--text-brand-strong);
 }
+
+.badge svg {
+  width: var(--layout-badge-icon);
+  height: var(--layout-badge-icon);
+}

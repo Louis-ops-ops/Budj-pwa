@@ -29,7 +29,7 @@
 
 .headActions {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-12);
 }
 
 .amount {
@@ -101,7 +101,7 @@
 .hero {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-12);
   padding: var(--space-16);
   border-radius: var(--radius-lg);
   background: var(--hero-bg);
@@ -110,9 +110,9 @@
 
 .amountLine {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   flex-wrap: wrap;
-  gap: var(--space-4) var(--space-10);
+  gap: var(--space-4) var(--space-8);
   white-space: nowrap;
 }
 
@@ -165,14 +165,13 @@
 .group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
+  gap: var(--space-16);
 }
 
 .groupList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-8) var(--space-12);
+  padding: var(--space-6) var(--space-12);
   border-radius: var(--radius-md);
   background: var(--bg-brand-subtle);
 }
@@ -186,9 +185,9 @@
 .fixedItem {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
+  gap: var(--space-8);
   width: 100%;
-  min-height: var(--layout-row-expense);
+  padding: var(--space-6) 0;
   text-align: left;
 }
 
@@ -231,7 +230,7 @@
   margin-top: auto;
 }
 
-.breakdown {
+.resume {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -251,18 +250,18 @@
 .shareLegend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4) var(--space-12);
+  gap: var(--space-6) var(--space-12);
 }
 
 .shareItem {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .shareDot {
-  width: var(--layout-legend-dot);
-  height: var(--layout-legend-dot);
+  width: var(--layout-dot);
+  height: var(--layout-dot);
   border-radius: var(--radius-xs);
 }
 
@@ -270,7 +269,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-8);
-  min-height: var(--layout-row-expense);
+  min-height: var(--layout-control);
   padding: var(--space-12) var(--space-16);
   border-radius: var(--radius-md);
   background: var(--bg-brand-muted);
@@ -301,17 +300,17 @@
   flex-direction: column;
   gap: var(--space-16);
   padding: var(--space-16);
+  margin-top: var(--space-8);
   border-radius: var(--radius-md);
-  border: var(--layout-border-strong) solid var(--feedback-success-fg);
-  background: var(--bg-surface);
+  background: var(--bg-brand-subtle);
 }
 
 .monthCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-10);
+  gap: var(--space-12);
   width: 100%;
-  padding: var(--space-12);
+  padding: var(--space-16);
   border-radius: var(--radius-md);
   background: var(--bg-brand-subtle);
   text-align: left;
@@ -336,6 +335,71 @@
   color: var(--card-fg);
 }
 
-.heroAmount {
-  font-weight: var(--font-weight-medium);
+.heroFigure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pct {
+  width: var(--layout-gauge-label);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.monthTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.pill {
+  padding: var(--space-2) var(--space-8);
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-muted);
+}
+
+.monthResult {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.monthList {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+  overflow: hidden;
+}
+
+.monthRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-12) var(--space-16);
+  text-align: left;
+}
+
+.monthRow + .monthRow {
+  border-top: var(--layout-border) solid var(--bg-brand-strong);
+}
+
+.nextCharge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.cardName {
+  flex: 1;
+  min-width: 0;
 }

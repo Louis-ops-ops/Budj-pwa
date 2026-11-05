@@ -26,7 +26,7 @@ export function DayPicker({
           type="button"
           role="radio"
           aria-checked={day === value}
-          className={`t-body-medium tabular ${styles.day} ${day === value ? styles.selected : ''}`}
+          className={`tabular ${day === value ? 't-body-bold' : 't-body-regular'} ${styles.day} ${day === value ? styles.selected : ''}`}
           onClick={() => onChange(day)}
         >
           {day}

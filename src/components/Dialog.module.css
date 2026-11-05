@@ -104,7 +104,8 @@
     flex-shrink: 0;
     /* Tall touch area, without pushing the title down. */
     height: var(--layout-control);
-    margin: calc(-1 * var(--space-12)) 0 calc(-1 * var(--space-32));
+    margin: calc(-1 * var(--space-12)) 0
+      calc(var(--space-12) + var(--layout-sheet-handle-height) - var(--layout-control));
     padding-top: var(--space-12);
     touch-action: none;
   }
@@ -156,6 +157,7 @@
   .footer {
     flex-direction: column-reverse;
     align-items: center;
+    padding-top: var(--space-8);
   }
 
   .footerButtons {

@@ -93,14 +93,15 @@ export function FixedExpenseDialog({
       onClose={onClose}
       onSubmit={submit}
       submitLabel={fixed ? 'Enregistrer' : 'Ajouter la dépense fixe'}
+      submitIcon={isMobile && !fixed ? 'add' : undefined}
       submitDisabled={!valid}
       footerStart={
         fixed && <TextLink label="Supprimer" icon="delete" tone="danger" onClick={remove} />
       }
     >
-      <div className={styles.group}>
+      <div className={isMobile ? styles.amountBlock : styles.group}>
         <AmountInput value={amount} onChange={setAmount} label="Montant mensuel" autoFocus />
-        <Text variant="label-regular" className={styles.current}>
+        <Text variant="label-regular" className={isMobile ? styles.annualCost : styles.current}>
           {cents > 0 ? (
             <>
               Soit <strong className="t-label-bold tabular">{formatEuro(cents * 12)}</strong> par an
@@ -132,7 +133,7 @@ export function FixedExpenseDialog({
             <Text variant="label-medium" color="brand" as="span">
               Jour du prélèvement
             </Text>
-            <Text variant="label-regular" color="tertiary" as="span">
+            <Text variant="label-regular" color="secondary" as="span">
               Le {dayNumber === 1 ? '1er' : dayNumber} de chaque mois
             </Text>
           </div>

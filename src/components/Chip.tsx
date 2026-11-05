@@ -22,7 +22,11 @@ export function CategoryChip({
   return (
     <button
       type="button"
-      className={[styles.chip, selected ? styles.selected : ''].join(' ')}
+      className={[
+        styles.chip,
+        selected ? styles.selected : '',
+        color === 'bleu' ? styles.outlined : ''
+      ].join(' ')}
       style={style}
       aria-pressed={selected}
       onClick={onClick}

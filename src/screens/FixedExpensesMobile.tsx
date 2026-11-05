@@ -49,7 +49,7 @@ function FixedItem({
         <Text variant="body-medium" as="span">
           {fixed.label}
         </Text>
-        <Text variant="caption-medium" color="tertiary" as="span">
+        <Text variant="caption-medium" color="secondary" as="span">
           {caption}
         </Text>
       </span>
@@ -152,7 +152,7 @@ export function FixedListMobile({
     <MobilePage>
       <header className={styles.headerRow}>
         <IconButton icon="chevron" iconRotate={180} label="Retour" onClick={() => navigate('/')} />
-        <Text variant="h1" as="h1">
+        <Text variant="h2" as="h1">
           Dépenses fixes
         </Text>
         <IconButton
@@ -166,17 +166,17 @@ export function FixedListMobile({
         className={styles.hero}
         style={
           {
-            '--hero-bg': 'var(--bg-brand-subtle)',
-            '--hero-fg': 'var(--text-brand-deep)'
+            '--hero-bg': 'var(--category-bleu-bg)',
+            '--hero-fg': 'var(--category-bleu-fg)'
           } as CSSProperties
         }
         aria-label="Total mensuel"
       >
         <div className={styles.spread}>
-          <Text variant="body-regular" as="span">
+          <Text variant="label-regular" as="span">
             Chaque mois
           </Text>
-          <Text variant="body-regular" as="span">
+          <Text variant="label-regular" as="span">
             {plural(status.count, 'prélèvement', 'prélèvements')}
           </Text>
         </div>
@@ -184,14 +184,14 @@ export function FixedListMobile({
           {formatEuro(status.total)}
         </Text>
         <div className={styles.gaugeRow}>
-          <Gauge ratio={status.ratio} fill="bg-accent" track="bg-brand-strong" height="strong" />
-          <Text variant="caption-medium" as="span" tabular>
+          <Gauge ratio={status.ratio} fill="bg-accent" track="bg-brand-strong" />
+          <Text variant="caption-medium" color="brand" as="span" tabular className={styles.pct}>
             {Math.round(status.ratio * 100)} %
           </Text>
         </div>
         <div className={styles.split}>
           <div className={styles.splitItem}>
-            <Text variant="body-regular" as="span">
+            <Text variant="label-regular" as="span">
               Prélevé
             </Text>
             <Text variant="h3" as="span" tabular>
@@ -199,7 +199,7 @@ export function FixedListMobile({
             </Text>
           </div>
           <div className={styles.splitItem}>
-            <Text variant="body-regular" as="span">
+            <Text variant="label-regular" as="span">
               À venir
             </Text>
             <Text variant="h3" color="brand" as="span" tabular>
@@ -210,7 +210,7 @@ export function FixedListMobile({
       </section>
 
       {next && (
-        <div className={styles.list}>
+        <div className={styles.nextCharge}>
           <Text variant="label-medium" color="brand" as="h2">
             Prochain prélèvement
           </Text>
@@ -230,7 +230,7 @@ export function FixedListMobile({
             <Text variant="h2" as="h2">
               {g.subcategory.name}
             </Text>
-            <Text variant="body-regular" color="brand" as="span" tabular>
+            <Text variant="body-regular" color="brand-faint" as="span" tabular>
               {formatEuro(g.total)}
             </Text>
           </div>

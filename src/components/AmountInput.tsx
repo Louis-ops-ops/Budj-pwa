@@ -11,6 +11,8 @@ interface AmountInputProps {
   size?: 'regular' | 'compact'
 }
 
+const LONG_AMOUNT = 5
+
 /** "1900,5" → "1 900,5" for display. */
 function group(text: string): string {
   const [units, decimals] = text.split(',')
@@ -39,7 +41,11 @@ export function AmountInput({
 
   return (
     <div
-      className={[styles.wrapper, size === 'compact' ? styles.compact : ''].join(' ')}
+      className={[
+        styles.wrapper,
+        size === 'compact' ? styles.compact : '',
+        group(value).length > LONG_AMOUNT ? styles.long : ''
+      ].join(' ')}
       onClick={() => inputRef.current?.focus()}
     >
       <span

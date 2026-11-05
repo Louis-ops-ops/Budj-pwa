@@ -254,14 +254,24 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
+  padding: var(--space-8) 0;
 }
 
 .impactSentence {
   text-align: center;
 }
 
-.impactGood {
-  color: var(--text-success);
+.annualCost {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.annualCost strong {
+  color: var(--text-brand);
+}
+
+.groupLabelMuted {
+  color: var(--text-secondary);
 }
 
 @media (max-width: 1023px) {
@@ -358,5 +368,12 @@
 @media (max-width: 1023px) {
   .groupLabel {
     color: var(--text-brand);
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Budget and allocation form one block on the design. */
+  .allocation {
+    margin-top: calc(var(--space-8) - var(--space-24));
   }
 }

@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router'
 import { categoryPaint } from '../data/colors'
-import { addMonths, formatMonthName, formatMonthYear, monthOf, todayISO } from '../data/dates'
+import { addMonths, formatMonthName, formatMonthYear, todayISO } from '../data/dates'
 import {
   formatEuro,
   formatEuroFloor,
@@ -22,16 +22,14 @@ import styles from './Mobile.module.css'
 
 const CHART_MONTHS = 6
 const capitalize = (text: string): string => text.charAt(0).toUpperCase() + text.slice(1)
-const signedPercent = (n: number): string =>
-  `${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)} %`
 
-/** Figma: Évolution, Mois par mois (171:632). */
+/** Figma: Évolution, Mois par mois (266:2 and 266:24). */
 export function EvolutionMobile(): React.JSX.Element {
   const data = useBudj((s) => s.data)
   const navigate = useNavigate()
   const today = todayISO()
   const series = sel.savingsSeries(data, today).slice(-CHART_MONTHS)
-  const rows = sel.monthRows(data, today)
+  const [current, ...past] = sel.monthRows(data, today)
   const [picked, setPicked] = useState<string | null>(null)
   const selected = series.find((m) => m.month === picked) ?? series[series.length - 1]
 
@@ -61,7 +59,7 @@ export function EvolutionMobile(): React.JSX.Element {
 
       {selected ? (
         <>
-          <div className={styles.header}>
+          <div className={styles.figure}>
             <div className={styles.amountLine}>
               <Text
                 variant="display-l"
@@ -93,12 +91,7 @@ export function EvolutionMobile(): React.JSX.Element {
               <Text variant="h3" as="h2">
                 Mes économies
               </Text>
-              <Text
-                variant="label-medium"
-                color={total < 0 ? 'danger' : 'success'}
-                as="span"
-                tabular
-              >
+              <Text variant="label-medium" color={total < 0 ? 'danger' : 'brand'} as="span" tabular>
                 {formatEuroSigned(Math.round(total / 100) * 100)} sur {series.length} mois
               </Text>
             </div>
@@ -120,55 +113,73 @@ export function EvolutionMobile(): React.JSX.Element {
         Mois par mois
       </Text>
       <div className={styles.list}>
-        {rows.map((row) => {
-          const current = row.month === monthOf(today)
-          const over = row.savings < 0
-          return (
-            <button
-              key={row.month}
-              type="button"
-              className={styles.monthCard}
-              onClick={() => navigate(`/evolution/${row.month}`)}
-            >
-              <span className={styles.headerRow}>
-                <Text variant="h3" as="span">
-                  {capitalize(formatMonthName(row.month))}
+        {current && (
+          <button
+            type="button"
+            className={styles.monthCard}
+            onClick={() => navigate(`/evolution/${current.month}`)}
+          >
+            <span className={styles.headerRow}>
+              <span className={styles.fixedTexts}>
+                <span className={styles.monthTitle}>
+                  <Text variant="h3" as="span">
+                    {capitalize(formatMonthName(current.month))}
+                  </Text>
+                  <Text variant="caption-medium" color="brand" as="span" className={styles.pill}>
+                    En cours
+                  </Text>
+                </span>
+                <Text variant="label-regular" color="tertiary" as="span" tabular>
+                  {formatEuroFloor(current.spent)} dépensés sur{' '}
+                  {formatEuroShort(sel.monthBudget(data, current.month))}
                 </Text>
-                {row.trend !== null && (
-                  <TrendBadge
-                    tone={current ? 'neutral' : row.trend <= 0 ? 'positive' : 'negative'}
-                    direction={current ? 'flat' : row.trend < 0 ? 'down' : row.trend > 0 ? 'up' : 'flat'}
-                    label={signedPercent(row.trend)}
-                  />
-                )}
               </span>
-              <span className={styles.spread}>
+              <span className={styles.monthResult}>
                 <Text
-                  variant="label-regular"
-                  color={over ? 'danger' : current ? 'brand' : 'primary'}
+                  variant="h1"
+                  color={current.savings < 0 ? 'danger' : 'primary'}
                   as="span"
                   tabular
                 >
-                  {formatEuroFloor(Math.abs(row.savings))}{' '}
-                  {over ? 'de dépassement' : current ? 'restants' : 'économisés'}
+                  {formatEuroFloor(Math.abs(current.savings))}
                 </Text>
-                <Text variant="h3" as="span" tabular>
-                  {formatEuroFloor(row.spent)}
-                </Text>
-              </span>
-              <span className={styles.gaugeRow}>
-                <Gauge
-                  ratio={row.ratio}
-                  fill={over ? 'bg-danger' : current ? 'bg-accent' : 'feedback-success-fg'}
-                  track="bg-brand-strong"
-                />
-                <Text variant="caption-medium" as="span" tabular>
-                  {percent(row.ratio)}
+                <Text variant="label-regular" color="tertiary" as="span">
+                  {current.savings < 0 ? 'de dépassement' : 'restants'}
                 </Text>
               </span>
-            </button>
-          )
-        })}
+            </span>
+            <Gauge
+              ratio={current.ratio}
+              fill={current.savings < 0 ? 'bg-danger' : 'bg-accent'}
+              track="bg-brand-strong"
+            />
+          </button>
+        )}
+
+        {past.length > 0 && (
+          <div className={styles.monthList}>
+            {past.map((row) => (
+              <button
+                key={row.month}
+                type="button"
+                className={styles.monthRow}
+                onClick={() => navigate(`/evolution/${row.month}`)}
+              >
+                <span className={styles.fixedTexts}>
+                  <Text variant="body-medium" as="span">
+                    {capitalize(formatMonthName(row.month))}
+                  </Text>
+                  <Text variant="label-regular" color="tertiary" as="span" tabular>
+                    {formatEuroFloor(row.spent)} dépensés
+                  </Text>
+                </span>
+                <Text variant="h2" color={row.savings < 0 ? 'danger' : 'success'} as="span" tabular>
+                  {formatEuroSigned(Math.round(row.savings / 100) * 100)}
+                </Text>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </MobilePage>
   )
@@ -237,7 +248,7 @@ export function MonthDetailMobile({ month }: { month: string }): React.JSX.Eleme
             fill={savings < 0 ? 'bg-danger' : 'feedback-success-fg'}
             track="bg-brand-strong"
           />
-          <Text variant="caption-medium" as="span" tabular>
+          <Text variant="caption-medium" as="span" tabular className={styles.pct}>
             {percent(ratio)}
           </Text>
         </div>
@@ -278,7 +289,9 @@ export function MonthDetailMobile({ month }: { month: string }): React.JSX.Eleme
                 variant="h1"
                 as="span"
                 tabular
-                color={c.tone === 'positive' ? 'success' : c.tone === 'negative' ? 'danger' : 'primary'}
+                color={
+                  c.tone === 'positive' ? 'success' : c.tone === 'negative' ? 'danger' : 'primary'
+                }
               >
                 {c.delta === 0 ? 'Stable' : formatEuroSigned(c.delta)}
               </Text>

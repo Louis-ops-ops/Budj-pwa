@@ -4,7 +4,7 @@
   align-items: center;
   gap: var(--space-24);
   flex-shrink: 0;
-  padding: var(--space-12) var(--layout-screen-margin)
+  padding: var(--space-18) var(--layout-screen-margin)
     max(var(--safe-bottom), var(--layout-screen-margin));
   background: var(--bg-app);
 }
@@ -39,14 +39,14 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
-  min-width: var(--layout-control);
+  min-width: calc(var(--layout-control) - var(--space-4));
   height: var(--layout-control);
   color: var(--icon-brand);
   text-decoration: none;
 }
 
 .active {
-  height: calc(var(--layout-control) - var(--space-16));
+  height: calc(var(--layout-control) - var(--space-12) - var(--space-2));
   padding: 0 var(--space-10);
   border-radius: var(--radius-full);
   border: var(--layout-border) solid var(--border-brand);

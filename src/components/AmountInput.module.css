@@ -67,3 +67,18 @@
     animation: none;
   }
 }
+
+@media (max-width: 1023px) {
+  .wrapper {
+    gap: var(--space-4);
+  }
+
+  .cursor {
+    height: calc(var(--line-height-display-xl) - var(--space-24));
+  }
+
+  .long .value {
+    font-size: var(--font-size-display-m);
+    line-height: var(--line-height-display-m);
+  }
+}

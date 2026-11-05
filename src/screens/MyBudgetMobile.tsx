@@ -122,7 +122,7 @@ export function MyBudgetMobile(): React.JSX.Element {
             <Text variant="h2" as="span">
               Dépenses fixes
             </Text>
-            <Text variant="h3" as="span" tabular>
+            <Text variant="body-medium" as="span" tabular>
               {formatEuroFloor(sel.fixedTotal(data, month))}
             </Text>
           </span>
@@ -130,10 +130,10 @@ export function MyBudgetMobile(): React.JSX.Element {
             <span className={styles.fixedLines}>
               {groups.map((g) => (
                 <span key={g.subcategory.id} className={styles.spread}>
-                  <Text variant="body-regular" as="span">
+                  <Text variant="label-regular" as="span">
                     {g.subcategory.name}
                   </Text>
-                  <Text variant="body-regular" as="span" tabular>
+                  <Text variant="label-regular" as="span" tabular>
                     {formatEuroFloor(g.total)}
                   </Text>
                 </span>
@@ -155,7 +155,14 @@ export function MyBudgetMobile(): React.JSX.Element {
                 deleting ? confirmDelete(s.category) : navigate(`/categories/${s.category.id}`)
               }
             >
-              <span className={styles.cardRow}>
+              {deleting ? (
+                <span className={styles.cardRow}>
+                  <Text variant="h3" as="span" className={styles.cardName}>
+                    {s.category.name}
+                  </Text>
+                  <Icon name="delete" size={20} className={styles.deleteIcon} />
+                </span>
+              ) : (
                 <span className={styles.cardBody}>
                   <span className={styles.spread}>
                     <Text variant="h3" as="span">
@@ -179,8 +186,7 @@ export function MyBudgetMobile(): React.JSX.Element {
                     </Text>
                   </span>
                 </span>
-                {deleting && <Icon name="delete" size={20} className={styles.deleteIcon} />}
-              </span>
+              )}
             </button>
           )
         })}

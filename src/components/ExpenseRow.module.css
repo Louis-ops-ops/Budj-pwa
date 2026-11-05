@@ -174,8 +174,9 @@
 
 @media (max-width: 1023px) {
   .row {
-    padding: var(--space-4) 0;
-    min-height: var(--layout-control);
+    gap: var(--space-8);
+    padding: var(--space-6) 0;
+    min-height: 0;
     border: none;
   }
 }

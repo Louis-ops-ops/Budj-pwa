@@ -247,7 +247,7 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
               </div>
               {data.categories.length > 1 && (
                 <>
-                  <Text variant="label-medium" color="tertiary">
+                  <Text variant="label-medium" color={isMobile ? 'brand' : 'tertiary'}>
                     Déplacer vers
                   </Text>
                   <ChipList label="Déplacer vers">
@@ -270,6 +270,7 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
                 <div className={styles.selectionButtons}>
                   <Button
                     label="Supprimer"
+                    icon={isMobile ? 'delete' : undefined}
                     variant="secondary"
                     disabled={selected.size === 0}
                     onClick={() =>
@@ -283,6 +284,7 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
                   />
                   <Button
                     label="Déplacer"
+                    icon={isMobile ? 'move' : undefined}
                     disabled={selected.size === 0 || !target}
                     onClick={move}
                   />
@@ -345,24 +347,26 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
               />
             )}
           </div>
-          <Text variant="body-regular" className={status.over ? styles.over : undefined}>
-            {status.over ? 'Dépassement de' : isCurrent ? 'Il te reste' : 'Il te restait'}
-          </Text>
-          <div className={mobile.amountLine}>
-            <Text
-              variant="display-l"
-              tabular
-              className={[mobile.heroAmount, status.over ? styles.over : ''].join(' ')}
-            >
-              {formatEuroFloor(Math.abs(status.remaining))}
+          <div className={mobile.heroFigure}>
+            <Text variant="label-regular" className={status.over ? styles.over : undefined}>
+              {status.over ? 'Dépassement de' : isCurrent ? 'Il te reste' : 'Il te restait'}
             </Text>
-            <Text variant="h3" tabular>
-              sur {formatEuroShort(status.budget)}
-            </Text>
+            <div className={mobile.amountLine}>
+              <Text
+                variant="display-m"
+                tabular
+                className={[mobile.amount, status.over ? styles.over : ''].join(' ')}
+              >
+                {formatEuroFloor(Math.abs(status.remaining))}
+              </Text>
+              <Text variant="h3" tabular>
+                sur {formatEuroShort(status.budget)}
+              </Text>
+            </div>
           </div>
           <div className={mobile.gaugeRow}>
-            <Gauge ratio={status.ratio} fill={status.over ? 'bg-danger' : fg} height="strong" />
-            <Text variant="caption-medium" as="span" tabular>
+            <Gauge ratio={status.ratio} fill={status.over ? 'bg-danger' : fg} />
+            <Text variant="caption-medium" as="span" tabular className={mobile.pct}>
               {percent(status.ratio)}
             </Text>
           </div>
@@ -555,7 +559,7 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
 function MobileStat({ label, value }: { label: string; value: string }): React.JSX.Element {
   return (
     <div className={mobile.stat}>
-      <Text variant="label-regular" color="tertiary" as="span">
+      <Text variant="label-regular" color="secondary" as="span">
         {label}
       </Text>
       <Text variant="h3" as="span" tabular>

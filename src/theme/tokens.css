@@ -238,17 +238,21 @@
   /* ---------- Layout (fixed sizes from the Figma desktop frames) ---------- */
   --layout-screen-margin: 24px;
   --layout-screen-top: 44px;
-  --layout-chart-bar-max: 46px;
+  --layout-field-mobile: 66px;
+  --layout-avatar-mobile: 36px;
+  --layout-badge-icon: 14px;
+  --layout-gauge-label: 32px;
+  --layout-chart-bar-mobile: 28px;
   --layout-selection-bar: 176px;
-  --layout-chart-positive-mobile: 96px;
-  --layout-chart-negative-mobile: 64px;
+  --layout-chart-positive-mobile: 104px;
+  --layout-chart-negative-mobile: 80px;
   --layout-sheet-handle-width: 40px;
   --layout-sheet-handle-height: 5px;
   --layout-sheet-gap: 12px;
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
   --display-l-fluid: 21vw;
-  --display-xl-fluid: 20vw;
+  --display-xl-fluid: 24vw;
   --display-m-fluid: 15vw;
   --pressed-opacity: 0.6;
   --layout-sidebar: 248px;

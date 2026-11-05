@@ -64,7 +64,12 @@ export function HistoryMobile({
   const entries: Entry[] = [
     ...sel
       .filterExpenses(sel.expensesOfMonth(data, month), '', activeFilter)
-      .map((expense): Entry => ({ kind: 'expense', date: expense.date, amount: expense.amount, expense })),
+      .map((expense): Entry => ({
+        kind: 'expense',
+        date: expense.date,
+        amount: expense.amount,
+        expense
+      })),
     ...(activeFilter === null
       ? sel
           .paidFixedEntries(data, month, today)
@@ -80,15 +85,11 @@ export function HistoryMobile({
         <Text variant="h1" as="h1">
           Historique
         </Text>
-        <MonthPicker
-          value={month}
-          months={sel.availableMonths(data, today)}
-          onChange={onMonth}
-        />
+        <MonthPicker value={month} months={sel.availableMonths(data, today)} onChange={onMonth} />
       </header>
 
-      <div className={styles.header}>
-        <Text variant="body-regular" color="tertiary">
+      <div className={styles.resume}>
+        <Text variant="label-regular" color="secondary">
           Dépensé en {formatMonthName(month)}
         </Text>
         <div className={styles.amountLine}>
@@ -103,38 +104,38 @@ export function HistoryMobile({
             />
           )}
         </div>
-      </div>
 
-      {breakdown.shares.length > 0 && (
-        <div className={styles.breakdown}>
-          <div className={styles.shareBar} aria-hidden="true">
-            {breakdown.shares.map((s) => (
-              <span
-                key={s.key}
-                style={
-                  {
-                    flexGrow: s.amount,
-                    background: shareLabel(s.key)[1]
-                  } as CSSProperties
-                }
-              />
-            ))}
-          </div>
-          <div className={styles.shareLegend}>
-            {breakdown.shares.map((s) => {
-              const [label, color] = shareLabel(s.key)
-              return (
-                <span key={s.key} className={styles.shareItem}>
-                  <span className={styles.shareDot} style={{ background: color }} />
-                  <Text variant="label-regular" color="tertiary" as="span" tabular>
-                    {label} {Math.round(s.ratio * 100)} %
-                  </Text>
-                </span>
-              )
-            })}
-          </div>
-        </div>
-      )}
+        {breakdown.shares.length > 0 && (
+          <>
+            <div className={styles.shareBar} aria-hidden="true">
+              {breakdown.shares.map((s) => (
+                <span
+                  key={s.key}
+                  style={
+                    {
+                      flexGrow: s.amount,
+                      background: shareLabel(s.key)[1]
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
+            <div className={styles.shareLegend}>
+              {breakdown.shares.map((s) => {
+                const [label, color] = shareLabel(s.key)
+                return (
+                  <span key={s.key} className={styles.shareItem}>
+                    <span className={styles.shareDot} style={{ background: color }} />
+                    <Text variant="label-regular" color="secondary" as="span" tabular>
+                      {label} {Math.round(s.ratio * 100)} %
+                    </Text>
+                  </span>
+                )
+              })}
+            </div>
+          </>
+        )}
+      </div>
 
       {uncategorized > 0 && (
         <button
@@ -188,7 +189,7 @@ export function HistoryMobile({
               <Text variant="h3" as="h2">
                 {formatLongDay(day)}
               </Text>
-              <Text variant="body-regular" color="brand" as="span" tabular>
+              <Text variant="body-regular" color="brand-faint" as="span" tabular>
                 {formatEuro(-ofDay.reduce((a, e) => a + e.amount, 0))}
               </Text>
             </div>

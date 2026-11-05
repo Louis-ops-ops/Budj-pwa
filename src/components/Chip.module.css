@@ -18,6 +18,10 @@
     border-color var(--motion-fast) ease;
 }
 
+.outlined:not(.selected) {
+  border-color: var(--border-brand-subtle);
+}
+
 .chip:hover {
   border-color: var(--chip-fg);
 }

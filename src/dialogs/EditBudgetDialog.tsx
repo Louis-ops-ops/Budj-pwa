@@ -122,7 +122,7 @@ export function EditBudgetDialog({
       </div>
 
       <div className={styles.group}>
-        <Text variant="label-medium" className={styles.groupLabel}>
+        <Text variant="label-medium" className={styles.groupLabelMuted}>
           Après modification
         </Text>
         <div className={styles.preview}>
@@ -150,6 +150,7 @@ export function EditBudgetDialog({
           <Gauge
             ratio={ratio}
             fill={ratio > 1 ? 'bg-danger' : category ? categoryPaint(category).fg : 'bg-accent'}
+            track={isMobile ? 'bg-brand-strong' : undefined}
             label={percent(Number.isFinite(ratio) ? ratio : 1)}
           />
         </div>

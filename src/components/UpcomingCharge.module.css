@@ -45,3 +45,14 @@
 .due {
   color: var(--text-tertiary);
 }
+
+@media (max-width: 1023px) {
+  .item {
+    min-height: 0;
+    padding: var(--space-12);
+  }
+
+  .highlighted {
+    border: var(--layout-border) solid var(--border-brand-subtle);
+  }
+}

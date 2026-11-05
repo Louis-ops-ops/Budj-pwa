@@ -170,6 +170,7 @@ export function ExpenseDialog({
         onClose={onClose}
         onSubmit={submit}
         submitLabel={`Ajouter les ${lines.length} dépenses`}
+        submitIcon="add"
         submitDisabled={!valid}
         headerExtra={
           <DateChip
@@ -189,7 +190,12 @@ export function ExpenseDialog({
         }
       >
         {lines.map((line, i) => (
-          <div key={line.key} className={styles.lineCard} role="group" aria-label={`Dépense ${i + 1}`}>
+          <div
+            key={line.key}
+            className={styles.lineCard}
+            role="group"
+            aria-label={`Dépense ${i + 1}`}
+          >
             <div className={styles.previewLine}>
               <div className={styles.lineCardAmount}>
                 <Text variant="label-regular" color="tertiary" as="span">
@@ -362,6 +368,7 @@ export function ExpenseDialog({
         onClose={onClose}
         onSubmit={submit}
         submitLabel={expense ? 'Enregistrer' : 'Ajouter la dépense'}
+        submitIcon={expense ? undefined : 'add'}
         submitDisabled={!valid}
         headerExtra={
           <DateChip
@@ -385,12 +392,12 @@ export function ExpenseDialog({
           {impact && category && (
             <Text
               variant="label-regular"
-              color={impact.over ? 'danger' : 'tertiary'}
+              color={impact.over ? 'danger' : 'secondary'}
               className={styles.impactSentence}
               aria-live="polite"
             >
               {impact.over ? 'Dépassement de ' : 'Il restera '}
-              <strong className={impact.over ? undefined : styles.impactGood}>
+              <strong style={impact.over ? undefined : { color: categoryPaint(category).fg }}>
                 {formatEuro(Math.abs(impact.remainingAfter))}
               </strong>
               {' sur '}
