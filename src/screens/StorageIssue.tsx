@@ -1,6 +1,6 @@
 import { useBudj, type StorageIssue } from '../data/store'
 import { useUi } from '../ui/uiStore'
-import { importBackup } from '../platform/importBackup'
+import { importBackup } from '../platform/backup'
 import { Button } from '../components/Button'
 import { Text } from '../components/Text'
 import styles from './StorageIssue.module.css'
@@ -44,7 +44,7 @@ export function StorageIssueScreen({ issue }: { issue: StorageIssue }): React.JS
         {issue === 'corrupt' && (
           <div className={styles.actions}>
             <Button label="Repartir de zéro" variant="secondary" onClick={confirmStartFresh} />
-            <Button label="Importer une sauvegarde" onClick={() => void importBackup()} />
+            <Button label="Importer une sauvegarde" onClick={() => void importBackup({ confirm: false })} />
           </div>
         )}
       </div>

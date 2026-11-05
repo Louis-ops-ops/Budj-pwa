@@ -1,21 +1,28 @@
 import { openDB, type IDBPDatabase } from 'idb'
 import type { BudjData, ThemeSetting } from '../shared/types'
 import { migrate } from '../shared/migrate'
+import { todayISO } from '../data/dates'
+
+export interface StorageStatus {
+  persisted: boolean
+  installed: boolean
+  usage?: number
+  quota?: number
+}
 
 export interface BudjPlatform {
   loadData(): Promise<BudjData | null>
   saveData(data: BudjData): Promise<void>
-  exportData(): Promise<{ ok: boolean; filename?: string }>
+  /** Takes the data so the file leaves in the same tick as the click (iOS share sheet). */
+  exportData(data: BudjData): Promise<{ ok: boolean; filename?: string }>
   importData(): Promise<BudjData | null>
   getTheme(): Promise<ThemeSetting>
   setTheme(theme: ThemeSetting): Promise<void>
-  getStorageStatus(): Promise<{
-    persisted: boolean
-    installed: boolean
-    usage?: number
-    quota?: number
-  }>
+  getStorageStatus(): Promise<StorageStatus>
   requestPersistence(): Promise<boolean>
+  /** True when no export for 30 days and the reminder was not hidden in that time. */
+  getExportReminder(): Promise<boolean>
+  dismissExportReminder(): Promise<void>
   /** True when the last loadData() fell back on data-bak. */
   restoredFromBackup(): boolean
   /** Calls back when another tab or window saved. Returns the unsubscribe function. */
@@ -33,19 +40,22 @@ interface Meta {
   createdAt: string
   lastBackupAt?: string
   lastExportAt?: string
+  exportReminderHiddenAt?: string
 }
 
 const DB_NAME = 'budj'
 const STORE = 'kv'
 const CHANNEL = 'budj'
 const CORRUPT_PREFIX = 'data-corrupt-'
-const BACKUP_MAX_AGE_MS = 24 * 60 * 60 * 1000
+const DAY_MS = 24 * 60 * 60 * 1000
+const BACKUP_MAX_AGE_MS = DAY_MS
+const EXPORT_REMINDER_MS = 30 * DAY_MS
 
 function pickJsonFile(): Promise<string | null> {
   return new Promise((resolve) => {
     const input = document.createElement('input')
     input.type = 'file'
-    input.accept = 'application/json'
+    input.accept = 'application/json,.json'
     input.addEventListener('cancel', () => resolve(null))
     input.addEventListener('change', () => {
       const file = input.files?.[0]
@@ -53,6 +63,25 @@ function pickJsonFile(): Promise<string | null> {
     })
     input.click()
   })
+}
+
+/** Share sheet when the browser has one (iOS: Fichiers, AirDrop…), else a download. */
+async function deliverBackup(file: File): Promise<boolean> {
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file] })
+      return true
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return false
+    }
+  }
+  const url = URL.createObjectURL(file)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = file.name
+  link.click()
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  return true
 }
 
 function isInstalled(): boolean {
@@ -73,7 +102,7 @@ function parseBackup(text: string): BudjData {
   return data
 }
 
-export function createPlatform(pickFile = pickJsonFile): BudjPlatform {
+export function createPlatform(pickFile = pickJsonFile, deliverFile = deliverBackup): BudjPlatform {
   const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel(CHANNEL)
   let connection: Promise<IDBPDatabase> | null = null
   let restored = false
@@ -98,6 +127,12 @@ export function createPlatform(pickFile = pickJsonFile): BudjPlatform {
     const db = await open()
     const tx = db.transaction(STORE, 'readwrite', { durability: 'strict' })
     await Promise.all([tx.store.put(value, key), tx.done])
+  }
+
+  const updateMeta = async (changes: Partial<Meta>): Promise<void> => {
+    const db = await open()
+    const meta = await db.get(STORE, 'meta')
+    await write('meta', { ...meta, ...changes })
   }
 
   const load = async (): Promise<BudjData | null> => {
@@ -173,8 +208,15 @@ export function createPlatform(pickFile = pickJsonFile): BudjPlatform {
       channel?.postMessage('changed')
     },
 
-    // Web export comes with phase 4.
-    exportData: async () => ({ ok: false }),
+    async exportData(data) {
+      const filename = `budj-sauvegarde-${todayISO()}.json`
+      const file = new File([JSON.stringify(data, null, 2)], filename, {
+        type: 'application/json'
+      })
+      const ok = await deliverFile(file)
+      if (ok) await updateMeta({ lastExportAt: new Date().toISOString() })
+      return { ok, filename }
+    },
 
     async importData() {
       const text = await pickFile()
@@ -196,9 +238,35 @@ export function createPlatform(pickFile = pickJsonFile): BudjPlatform {
       await write('settings', { theme })
     },
 
-    // Eviction protection comes with phase 4.
-    getStorageStatus: async () => ({ persisted: false, installed: isInstalled() }),
-    requestPersistence: async () => false,
+    async getStorageStatus() {
+      const storage = typeof navigator === 'undefined' ? undefined : navigator.storage
+      const [persisted, estimate] = await Promise.all([storage?.persisted?.(), storage?.estimate?.()])
+      return {
+        persisted: persisted ?? false,
+        installed: isInstalled(),
+        usage: estimate?.usage,
+        quota: estimate?.quota
+      }
+    },
+
+    async requestPersistence() {
+      const storage = typeof navigator === 'undefined' ? undefined : navigator.storage
+      if (!storage?.persist) return false
+      if (await storage.persisted()) return true
+      return storage.persist()
+    },
+
+    async getExportReminder() {
+      const db = await open()
+      const meta: Meta | undefined = await db.get(STORE, 'meta')
+      const older = (date?: string): boolean =>
+        !date || Date.now() - new Date(date).getTime() > EXPORT_REMINDER_MS
+      return older(meta?.lastExportAt) && older(meta?.exportReminderHiddenAt)
+    },
+
+    async dismissExportReminder() {
+      await updateMeta({ exportReminderHiddenAt: new Date().toISOString() })
+    },
 
     restoredFromBackup: () => restored,
 

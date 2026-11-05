@@ -2,6 +2,11 @@
 import { CATEGORY_COLORS, type CategoryColor, type PaymentMethod } from '../shared/types'
 import { daysBetween, formatShortDay, todayISO } from './dates'
 
+export function formatBytes(bytes: number): string {
+  const megabytes = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 })
+  return `${megabytes.format(bytes / 1_000_000)} Mo`
+}
+
 export function initialOf(label: string): string {
   return label.trim().charAt(0).toUpperCase() || '?'
 }

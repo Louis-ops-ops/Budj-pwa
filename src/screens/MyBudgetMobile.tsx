@@ -11,7 +11,6 @@ import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { IconButton } from '../components/IconButton'
 import { Text } from '../components/Text'
-import { TextLink } from '../components/TextLink'
 import { MobilePage } from '../layout/Page'
 import styles from './Mobile.module.css'
 
@@ -178,10 +177,10 @@ export function MyBudgetMobile(): React.JSX.Element {
                     </Text>
                   </span>
                   <span className={styles.spread}>
-                    <Text variant="label-regular" as="span" className={styles.primaryText}>
+                    <Text variant="label-regular" as="span">
                       {s.over ? 'Dépassé, budget alloué' : 'Budget alloué'}
                     </Text>
-                    <Text variant="label-regular" as="span" tabular className={styles.primaryText}>
+                    <Text variant="label-regular" as="span" tabular>
                       {formatEuroShort(s.budget)}
                     </Text>
                   </span>
@@ -201,11 +200,6 @@ export function MyBudgetMobile(): React.JSX.Element {
         )}
       </div>
 
-      <TextLink
-        label="Réglages"
-        className={styles.settings}
-        onClick={() => openDialog({ kind: 'settings' })}
-      />
     </MobilePage>
   )
 }

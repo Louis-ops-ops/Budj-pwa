@@ -1,0 +1,26 @@
+/* Figma: Bandeau action (233:3082) */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-4) 0 var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-muted);
+  color: var(--text-brand-deep);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+  min-width: 0;
+  min-height: var(--layout-control);
+  padding: var(--space-12) 0;
+  text-align: left;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}

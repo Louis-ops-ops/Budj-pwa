@@ -36,5 +36,5 @@ export function changeTheme(theme: ThemeSetting): void {
 /** Startup: IndexedDB wins over the mirror. */
 export function syncTheme(): void {
   darkQuery.addEventListener('change', updateThemeColor)
-  platform.getTheme().then(applyTheme, updateThemeColor)
+  platform.getTheme().then((theme) => changeTheme(resolveTheme(theme)), updateThemeColor)
 }

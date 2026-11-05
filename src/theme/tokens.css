@@ -238,7 +238,6 @@
   /* ---------- Layout (fixed sizes from the Figma desktop frames) ---------- */
   --layout-screen-margin: 24px;
   --layout-screen-top: 44px;
-  --layout-field-mobile: 66px;
   --layout-avatar-mobile: 36px;
   --layout-badge-icon: 14px;
   --layout-gauge-label: 32px;

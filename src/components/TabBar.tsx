@@ -6,7 +6,8 @@ const TABS: { to: string; label: string; icon: IconName; activeFor?: RegExp }[] 
   { to: '/', label: 'Catégories', icon: 'categories', activeFor: /^\/(categories|fixes\/liste)/ },
   { to: '/fixes', label: 'Fixes', icon: 'calendar' },
   { to: '/historique', label: 'Historique', icon: 'history' },
-  { to: '/evolution', label: 'Évolution', icon: 'trendUp', activeFor: /^\/evolution/ }
+  { to: '/evolution', label: 'Évolution', icon: 'trendUp', activeFor: /^\/evolution/ },
+  { to: '/reglages', label: 'Réglages', icon: 'settings' }
 ]
 
 /** Bottom navigation below the desktop breakpoint (Figma: Nav bar 187:1482). */

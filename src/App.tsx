@@ -13,6 +13,7 @@ import { StorageIssueScreen } from './screens/StorageIssue'
 import { CategoryDetail } from './screens/CategoryDetail'
 import { FixedExpenses } from './screens/FixedExpenses'
 import { History } from './screens/History'
+import { Settings } from './screens/Settings'
 import { Evolution } from './screens/Evolution'
 import styles from './App.module.css'
 
@@ -49,7 +50,7 @@ function Shell(): React.JSX.Element {
 
   return (
     <div className={styles.shell}>
-      <InstallBanner onOpen={() => openDialog({ kind: 'settings' })} />
+      <InstallBanner onOpen={() => navigate('/reglages')} />
       <Sidebar
         pathname={location.pathname}
         onNewExpense={() => openDialog({ kind: 'expense', categoryId: categoryMatch?.[1] })}
@@ -88,6 +89,7 @@ export default function App(): React.JSX.Element | null {
             <Route path="fixes" element={<FixedExpenses />} />
             <Route path="fixes/liste" element={<FixedExpenses list />} />
             <Route path="historique" element={<History />} />
+            <Route path="reglages" element={<Settings />} />
             <Route path="evolution" element={<Evolution />} />
             <Route path="evolution/:month" element={<Evolution />} />
             <Route path="*" element={<MyBudget />} />

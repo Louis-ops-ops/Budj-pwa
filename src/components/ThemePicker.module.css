@@ -159,3 +159,9 @@
 .selected .radio {
   border: calc(var(--space-6) - var(--space-2) / 2) solid var(--bg-accent);
 }
+
+@media (max-width: 1023px) {
+  .group {
+    grid-template-columns: 1fr;
+  }
+}

@@ -15,6 +15,8 @@ import * as sel from '../data/selectors'
 import { useBudj } from '../data/store'
 import { useUi } from '../ui/uiStore'
 import { Avatar } from '../components/Avatar'
+import { FixedRow } from '../components/FixedRow'
+import { TextLink } from '../components/TextLink'
 import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
 import { Gauge } from '../components/Gauge'
@@ -80,6 +82,7 @@ export function FixedCalendarMobile({
   const byDay = sel.fixedByDay(data, month)
   const marked = new Map([...byDay].map(([d, list]) => [d, list.length]))
   const ofDay = byDay.get(selectedDay) ?? []
+  const groups = sel.fixedGroups(data, month)
 
   return (
     <MobilePage>
@@ -121,6 +124,55 @@ export function FixedCalendarMobile({
           Aucun prélèvement ce jour-là
         </Text>
       )}
+
+      <section className={styles.allFixed} aria-label="Tous les prélèvements">
+        <div className={styles.allFixedHead}>
+          <div className={styles.fixedTexts}>
+            <Text variant="h2" as="h2">
+              Tous les prélèvements
+            </Text>
+            <Text variant="label-regular" color="secondary" as="span">
+              Regroupés par sous-catégorie
+            </Text>
+          </div>
+          <TextLink
+            label="Nouvelle sous-catégorie"
+            icon="add"
+            onClick={() => openDialog({ kind: 'newSubcategory' })}
+          />
+        </div>
+        {groups.length > 0 && (
+          <div className={styles.allFixedCard}>
+            {groups.map((g) => (
+              <div key={g.subcategory.id} role="group" aria-label={g.subcategory.name}>
+                <div className={styles.allFixedGroup}>
+                  <Text variant="body-bold" as="span">
+                    {g.subcategory.name}
+                  </Text>
+                  <Text variant="label-regular" color="brand-faint" as="span" tabular>
+                    {formatEuro(g.total)} / mois
+                  </Text>
+                </div>
+                {g.items.map((f) => {
+                  const day = sel.chargeDay(f, month)
+                  return (
+                    <FixedRow
+                      key={f.id}
+                      status={sel.isFixedPaid(f, month, today) ? 'paid' : 'upcoming'}
+                      name={f.label}
+                      day={`Le ${day === 1 ? '1er' : day}`}
+                      monthly={formatEuro(f.amount)}
+                      yearly={`${formatEuro(sel.annualCost(f))} / an`}
+                      initial={initialOf(f.label)}
+                      onClick={() => openDialog({ kind: 'fixed', fixed: f })}
+                    />
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       <div className={styles.floating}>
         <Button

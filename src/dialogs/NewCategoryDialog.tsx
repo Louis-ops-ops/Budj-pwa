@@ -83,7 +83,7 @@ export function NewCategoryDialog({
                 {formatEuroShort(cents)}
               </Text>
             </div>
-            <div className={`${styles.previewLine} ${styles.previewPlain}`}>
+            <div className={styles.previewLine}>
               <Text variant="label-regular" as="span">
                 Budget alloué
               </Text>

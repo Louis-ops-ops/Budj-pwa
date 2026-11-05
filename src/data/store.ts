@@ -61,6 +61,7 @@ export const useBudj = create<BudjState>()((set, get) => {
       try {
         const data = await platform.loadData()
         set({ data: data ?? m.emptyData(), ready: true })
+        if (data?.onboardingDone) void platform.requestPersistence()
         if (platform.restoredFromBackup()) {
           useUi.getState().toast('Tes données ont été restaurées depuis la sauvegarde interne')
         }
@@ -79,6 +80,7 @@ export const useBudj = create<BudjState>()((set, get) => {
     },
 
     completeOnboarding({ monthlyBudget, fixedExpenses, categories }) {
+      void platform.requestPersistence()
       const today = todayISO()
       const month = monthOf(today)
       const updatedAt = nowISO()

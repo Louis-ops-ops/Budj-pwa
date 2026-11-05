@@ -403,3 +403,34 @@
   flex: 1;
   min-width: 0;
 }
+
+.allFixed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.allFixedHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+}
+
+.allFixedCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  border-radius: var(--radius-lg);
+  border: var(--layout-border) solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.allFixedGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-4) 0;
+}

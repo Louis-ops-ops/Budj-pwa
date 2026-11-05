@@ -239,7 +239,11 @@
     flex-wrap: wrap;
   }
 
-  .line > :first-child {
+  .line:has(.colorButton) {
+    flex-wrap: nowrap;
+  }
+
+  .line > :first-child:not(.colorButton) {
     flex: 1 1 100%;
   }
 }

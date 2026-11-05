@@ -114,36 +114,3 @@
   white-space: nowrap;
 }
 
-@media (max-width: 1023px) {
-  .field {
-    position: relative;
-  }
-
-  /* Label inside the box, as in the mobile design. */
-  .label {
-    position: absolute;
-    top: calc(var(--space-12) + var(--layout-focus-ring));
-    left: calc(var(--space-12) + var(--layout-focus-ring));
-    z-index: 1;
-    color: var(--text-brand);
-    font-weight: var(--font-weight-regular);
-    pointer-events: none;
-  }
-
-  .box {
-    height: var(--layout-field-mobile);
-    padding: var(--space-32) var(--space-12) var(--space-10);
-    border: var(--layout-focus-ring) solid var(--border-brand-subtle);
-    border-radius: var(--radius-md);
-  }
-
-  .input {
-    height: var(--line-height-body);
-  }
-
-  .box:has(.input:not(:placeholder-shown)),
-  .box:focus-within {
-    background: var(--bg-brand-muted);
-    box-shadow: none;
-  }
-}

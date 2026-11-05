@@ -12,6 +12,8 @@ interface FixedRowProps {
   yearly: string
   initial: string
   onEdit?(): void
+  /** Mobile: the whole row opens the edit sheet. */
+  onClick?(): void
 }
 
 export function FixedRow({
@@ -22,10 +24,22 @@ export function FixedRow({
   monthly,
   yearly,
   initial,
-  onEdit
+  onEdit,
+  onClick
 }: FixedRowProps): React.JSX.Element {
   return (
-    <div className={styles.row}>
+    <div
+      className={styles.row}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault()
+          onClick()
+        }
+      }}
+    >
       <Avatar color="bleu" initial={initial} />
       <span className={styles.texts}>
         <Text variant="body-medium" as="span">
