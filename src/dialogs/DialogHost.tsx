@@ -1,5 +1,5 @@
 import { useUi, type DialogEntry } from '../ui/uiStore'
-import { ConfirmDialog } from '../components/Dialog'
+import { ConfirmDialog, DialogClosing } from '../components/Dialog'
 import { ActionsDialog } from './ActionsDialog'
 import { ExpenseDialog } from './ExpenseDialog'
 import { EditBudgetDialog } from './EditBudgetDialog'
@@ -16,7 +16,9 @@ export function DialogHost(): React.JSX.Element {
   return (
     <>
       {dialogs.map((d) => (
-        <DialogSwitch key={d.id} entry={d} onClose={() => closeDialog(d.id)} />
+        <DialogClosing.Provider key={d.id} value={Boolean(d.closing)}>
+          <DialogSwitch entry={d} onClose={() => closeDialog(d.id)} />
+        </DialogClosing.Provider>
       ))}
     </>
   )

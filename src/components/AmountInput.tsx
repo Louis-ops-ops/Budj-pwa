@@ -47,6 +47,7 @@ export function AmountInput({
         group(value).length > LONG_AMOUNT ? styles.long : ''
       ].join(' ')}
       onClick={() => inputRef.current?.focus()}
+      data-keeps-keyboard
     >
       <span
         className={[valueClass, 'tabular', styles.value, empty ? styles.empty : ''].join(' ')}

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { HashRouter, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router'
 import { useBudj } from './data/store'
 import { useUi } from './ui/uiStore'
@@ -7,6 +7,7 @@ import { TabBar } from './components/TabBar'
 import { InstallBanner } from './components/InstallHelp'
 import { ToastHost } from './components/Toast'
 import { DialogHost } from './dialogs/DialogHost'
+import { Splash, shouldShowSplash } from './components/Splash'
 import { MyBudget } from './screens/MyBudget'
 import { Onboarding } from './screens/Onboarding'
 import { StorageIssueScreen } from './screens/StorageIssue'
@@ -18,6 +19,19 @@ import { Evolution } from './screens/Evolution'
 import styles from './App.module.css'
 
 const TAB_ROUTES = ['/', '/fixes', '/historique', '/evolution']
+const TOP_LEVEL = [...TAB_ROUTES, '/reglages']
+
+type PageTransition = 'none' | 'tab' | 'push' | 'pop'
+
+/** Between tabs: a fade. Into a detail screen: from the right. Back: from the left. */
+function transitionBetween(from: string, to: string): PageTransition {
+  const fromTop = TOP_LEVEL.includes(from)
+  const toTop = TOP_LEVEL.includes(to)
+  if (fromTop && toTop) return 'tab'
+  if (toTop) return 'pop'
+  if (fromTop) return 'push'
+  return to.split('/').length >= from.split('/').length ? 'push' : 'pop'
+}
 
 function Shell(): React.JSX.Element {
   const location = useLocation()
@@ -48,6 +62,17 @@ function Shell(): React.JSX.Element {
 
   const categoryMatch = /^\/categories\/([^/]+)/.exec(location.pathname)
 
+  const [page, setPage] = useState<{ path: string; transition: PageTransition }>({
+    path: location.pathname,
+    transition: 'none'
+  })
+  if (page.path !== location.pathname) {
+    setPage({
+      path: location.pathname,
+      transition: transitionBetween(page.path, location.pathname)
+    })
+  }
+
   return (
     <div className={styles.shell}>
       <InstallBanner onOpen={() => navigate('/reglages')} />
@@ -56,7 +81,9 @@ function Shell(): React.JSX.Element {
         onNewExpense={() => openDialog({ kind: 'expense', categoryId: categoryMatch?.[1] })}
         onOpenSettings={() => openDialog({ kind: 'settings' })}
       />
-      <Outlet />
+      <div key={page.path} className={styles.route} data-transition={page.transition}>
+        <Outlet />
+      </div>
       <TabBar
         pathname={location.pathname}
         onAdd={() => openDialog({ kind: 'expense', categoryId: categoryMatch?.[1] })}
@@ -70,36 +97,41 @@ export default function App(): React.JSX.Element | null {
   const onboardingDone = useBudj((s) => s.data.onboardingDone)
   const storageIssue = useBudj((s) => s.storageIssue)
   const load = useBudj((s) => s.load)
+  const [splash, setSplash] = useState(shouldShowSplash)
 
   useEffect(() => {
     void load()
   }, [load])
 
-  if (!ready) return null
+  const splashScreen = splash && <Splash ready={ready} onDone={() => setSplash(false)} />
+  if (!ready) return splashScreen || null
 
   return (
-    <HashRouter>
-      {storageIssue ? (
-        <StorageIssueScreen issue={storageIssue} />
-      ) : onboardingDone ? (
-        <Routes>
-          <Route element={<Shell />}>
-            <Route index element={<MyBudget />} />
-            <Route path="categories/:id" element={<CategoryDetail />} />
-            <Route path="fixes" element={<FixedExpenses />} />
-            <Route path="fixes/liste" element={<FixedExpenses list />} />
-            <Route path="historique" element={<History />} />
-            <Route path="reglages" element={<Settings />} />
-            <Route path="evolution" element={<Evolution />} />
-            <Route path="evolution/:month" element={<Evolution />} />
-            <Route path="*" element={<MyBudget />} />
-          </Route>
-        </Routes>
-      ) : (
-        <Onboarding />
-      )}
-      <DialogHost />
-      <ToastHost />
-    </HashRouter>
+    <>
+      <HashRouter>
+        {storageIssue ? (
+          <StorageIssueScreen issue={storageIssue} />
+        ) : onboardingDone ? (
+          <Routes>
+            <Route element={<Shell />}>
+              <Route index element={<MyBudget />} />
+              <Route path="categories/:id" element={<CategoryDetail />} />
+              <Route path="fixes" element={<FixedExpenses />} />
+              <Route path="fixes/liste" element={<FixedExpenses list />} />
+              <Route path="historique" element={<History />} />
+              <Route path="reglages" element={<Settings />} />
+              <Route path="evolution" element={<Evolution />} />
+              <Route path="evolution/:month" element={<Evolution />} />
+              <Route path="*" element={<MyBudget />} />
+            </Route>
+          </Routes>
+        ) : (
+          <Onboarding />
+        )}
+        <DialogHost />
+        <ToastHost />
+      </HashRouter>
+      {splashScreen}
+    </>
   )
 }

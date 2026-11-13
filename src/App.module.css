@@ -4,8 +4,54 @@
   background: var(--bg-app);
 }
 
+/* Wraps the screen: replayed on each navigation (keyed on the path). */
+.route {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  animation: var(--motion-page) var(--ease-smooth);
+}
+
+.route[data-transition='tab'] {
+  animation-name: pageFade;
+}
+
+.route[data-transition='push'] {
+  animation-name: pagePush;
+}
+
+.route[data-transition='pop'] {
+  animation-name: pagePop;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-8));
+  }
+}
+
+@keyframes pagePush {
+  from {
+    opacity: 0;
+    transform: translateX(var(--space-32));
+  }
+}
+
+@keyframes pagePop {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--space-32)));
+  }
+}
+
 @media (max-width: 1023px) {
   .shell {
+    flex-direction: column;
+  }
+
+  .route {
     flex-direction: column;
   }
 }

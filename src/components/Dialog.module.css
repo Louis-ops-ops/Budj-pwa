@@ -82,16 +82,57 @@
   }
 }
 
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes sink {
+  to {
+    opacity: 0;
+    transform: translateY(var(--space-8));
+  }
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* No "from": starts where a drag left the sheet. */
+@keyframes sheetOut {
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.overlay[data-closing] {
+  pointer-events: none;
+  animation: fadeOut var(--motion-sheet-out) var(--ease-exit) forwards;
+}
+
+.overlay[data-closing] .dialog {
+  animation: sink var(--motion-sheet-out) var(--ease-exit) forwards;
+}
+
 @media (max-width: 1023px) {
+  /* Sized on the visual viewport (set by Dialog), which ends above the keyboard. */
   .overlay {
+    inset: auto 0;
+    top: var(--viewport-top, 0);
+    height: var(--viewport-height, 100dvh);
     align-items: flex-end;
-    padding: 0 0 var(--keyboard-inset, 0);
+    padding: 0;
+    animation-duration: var(--motion-sheet-in);
   }
 
   .dialog,
   .small {
     width: 100%;
-    max-height: calc(var(--viewport-height, 100dvh) - var(--safe-top) - var(--space-12));
+    max-height: calc(100% - var(--safe-top) - var(--space-12));
+    animation: sheetIn var(--motion-sheet-in) var(--ease-smooth);
     padding: var(--space-12) var(--layout-screen-margin)
       max(var(--safe-bottom), var(--space-32));
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -127,6 +168,23 @@
 
   .footer {
     flex-wrap: wrap;
+  }
+
+  .overlay[data-closing] .dialog {
+    animation-name: sheetOut;
+  }
+
+  /* Keyboard open: the sheet grows to the top and scrolls as a whole,
+     with room at the bottom for the iOS form bar. */
+  .overlay[data-keyboard] .dialog {
+    height: calc(100% - var(--safe-top) - var(--space-12));
+    overflow-y: auto;
+    padding-bottom: calc(var(--space-32) + var(--layout-keyboard-bar));
+  }
+
+  .overlay[data-keyboard] .body {
+    flex: none;
+    overflow: visible;
   }
 
   .footerButtons {

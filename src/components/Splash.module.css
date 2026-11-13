@@ -1,0 +1,61 @@
+/* Launch screen of the installed app (Splash.tsx). */
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-app);
+}
+
+.splash[data-leaving] {
+  animation: leave var(--motion-page) var(--ease-exit) forwards;
+}
+
+.logo {
+  width: var(--layout-splash-logo);
+  height: auto;
+  overflow: visible;
+}
+
+/* The letter still to write. */
+.track {
+  fill: var(--bg-brand-subtle);
+}
+
+.stroke {
+  fill: none;
+  stroke: var(--bg-accent);
+  stroke-width: 72;
+  stroke-linecap: square;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  animation: write var(--ease-smooth) forwards;
+}
+
+.stroke[data-step='0'] {
+  animation-duration: calc(var(--motion-splash) * 0.3);
+}
+
+.stroke[data-step='1'] {
+  animation-duration: calc(var(--motion-splash) * 0.32);
+  animation-delay: calc(var(--motion-splash) * 0.3);
+}
+
+.stroke[data-step='2'] {
+  animation-duration: calc(var(--motion-splash) * 0.38);
+  animation-delay: calc(var(--motion-splash) * 0.62);
+}
+
+@keyframes write {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { IconName } from '../components/Icon'
 import type { Expense, FixedExpense } from '../shared/types'
 import { monthOf, todayISO } from '../data/dates'
+import { motionMs } from './motion'
 
 export interface RowAction {
   label: string
@@ -28,7 +29,8 @@ export type DialogRequest =
   | { kind: 'settings' }
   | { kind: 'actions'; title: string; actions: RowAction[] }
 
-export type DialogEntry = DialogRequest & { id: number }
+/** `closing`: playing its exit animation, removed right after. */
+export type DialogEntry = DialogRequest & { id: number; closing?: boolean }
 
 interface Toast {
   id: number
@@ -59,7 +61,13 @@ export const useUi = create<UiState>()((set, get) => ({
   },
 
   closeDialog(id) {
-    set({ dialogs: get().dialogs.filter((d) => d.id !== id) })
+    const entry = get().dialogs.find((d) => d.id === id)
+    if (!entry || entry.closing) return
+    const remove = (): void => set({ dialogs: get().dialogs.filter((d) => d.id !== id) })
+    const duration = motionMs('--motion-sheet-out')
+    if (duration === 0) return remove()
+    set({ dialogs: get().dialogs.map((d) => (d.id === id ? { ...d, closing: true } : d)) })
+    setTimeout(remove, duration)
   },
 
   toast(message) {

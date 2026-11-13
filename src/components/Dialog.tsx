@@ -1,4 +1,6 @@
 import {
+  createContext,
+  useContext,
   useEffect,
   useId,
   useRef,
@@ -19,6 +21,12 @@ const FOCUSABLE =
 
 // Bottom sheet: dragged further than this, it closes.
 const CLOSE_DRAG_PX = 96
+
+/** True while the dialog plays its exit animation (set by DialogHost). */
+export const DialogClosing = createContext(false)
+
+// The keyboard is open when it takes more than this from the viewport.
+const KEYBOARD_MIN_PX = 120
 
 // Stack of open dialogs: only the topmost one reacts to Escape and traps focus.
 const stack: string[] = []
@@ -61,6 +69,7 @@ export function Dialog({
   const overlayRef = useRef<HTMLDivElement>(null)
   const dragStart = useRef<number | null>(null)
   const [dragY, setDragY] = useState(0)
+  const closing = useContext(DialogClosing)
   const onCloseRef = useRef(onClose)
   useEffect(() => {
     onCloseRef.current = onClose
@@ -104,15 +113,17 @@ export function Dialog({
     }
   }, [id])
 
-  // The virtual keyboard shrinks the visual viewport: keep the sheet above it.
+  // The overlay follows the visual viewport, so the sheet stays above the keyboard.
+  // With the keyboard open, the sheet takes the whole height and scrolls.
   useEffect(() => {
     const viewport = window.visualViewport
     const overlay = overlayRef.current
     if (!viewport || !overlay) return
     const update = (): void => {
-      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop)
-      overlay.style.setProperty('--keyboard-inset', `${inset}px`)
+      overlay.style.setProperty('--viewport-top', `${viewport.offsetTop}px`)
       overlay.style.setProperty('--viewport-height', `${viewport.height}px`)
+      const keyboard = window.innerHeight - viewport.height > KEYBOARD_MIN_PX
+      overlay.toggleAttribute('data-keyboard', keyboard)
     }
     update()
     viewport.addEventListener('resize', update)
@@ -147,6 +158,7 @@ export function Dialog({
     <div
       ref={overlayRef}
       className={styles.overlay}
+      data-closing={closing || undefined}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}

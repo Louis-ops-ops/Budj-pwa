@@ -299,6 +299,17 @@
   /* ---------- Motion ---------- */
   --motion-fast: 150ms;
   --motion-base: 200ms;
+  --motion-page: 280ms;
+  --motion-sheet-in: 380ms;
+  --motion-sheet-out: 240ms;
+  --motion-count: 900ms;
+  --motion-count-delay: 200ms;
+  --motion-splash: 1200ms;
+  --layout-splash-logo: 96px;
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  /* Room under the sheet content for the iOS form bar above the keyboard. */
+  --layout-keyboard-bar: 64px;
 
   --disabled-opacity: 0.4;
   --outside-opacity: 0.3;
@@ -368,6 +379,12 @@
   :root {
     --motion-fast: 0ms;
     --motion-base: 0ms;
+    --motion-page: 0ms;
+    --motion-sheet-in: 0ms;
+    --motion-sheet-out: 0ms;
+    --motion-count: 0ms;
+    --motion-count-delay: 0ms;
+    --motion-splash: 0ms;
   }
 }
 

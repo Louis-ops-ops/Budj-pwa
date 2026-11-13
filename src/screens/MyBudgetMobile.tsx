@@ -7,6 +7,7 @@ import { formatEuroFloor, formatEuroShort } from '../data/money'
 import * as sel from '../data/selectors'
 import { useBudj } from '../data/store'
 import { useUi } from '../ui/uiStore'
+import { useCountUp } from '../ui/motion'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { IconButton } from '../components/IconButton'
@@ -26,6 +27,7 @@ export function MyBudgetMobile(): React.JSX.Element {
   const today = todayISO()
   const month = monthOf(today)
   const remaining = sel.globalRemaining(data, month)
+  const shownRemaining = useCountUp(remaining)
   const statuses = sel.categoryStatuses(data, month)
   const groups = sel.fixedGroups(data, month)
 
@@ -76,7 +78,7 @@ export function MyBudgetMobile(): React.JSX.Element {
           tabular
           className={styles.amount}
         >
-          {formatEuroFloor(Math.abs(remaining))}
+          {formatEuroFloor(Math.abs(shownRemaining))}
         </Text>
         {remaining < 0 && (
           <Text variant="h3" color="danger">

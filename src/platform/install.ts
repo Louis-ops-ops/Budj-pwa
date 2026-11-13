@@ -6,7 +6,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 export type InstallMode = 'installed' | 'prompt' | 'ios' | 'unavailable'
 
-const isStandalone = (): boolean =>
+export const isStandalone = (): boolean =>
   (navigator as Navigator & { standalone?: boolean }).standalone === true ||
   window.matchMedia('(display-mode: standalone)').matches
 
