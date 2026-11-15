@@ -113,24 +113,35 @@ export function Dialog({
     }
   }, [id])
 
-  // The overlay follows the visual viewport, so the sheet stays above the keyboard.
-  // With the keyboard open, the sheet takes the whole height and scrolls.
+  // The keyboard goes over the sheet: with it open, the sheet takes the whole height,
+  // scrolls, and keeps room at the bottom so every field can be brought above it.
   useEffect(() => {
     const viewport = window.visualViewport
     const overlay = overlayRef.current
-    if (!viewport || !overlay) return
+    const sheet = ref.current
+    if (!viewport || !overlay || !sheet) return
     const update = (): void => {
-      overlay.style.setProperty('--viewport-top', `${viewport.offsetTop}px`)
-      overlay.style.setProperty('--viewport-height', `${viewport.height}px`)
-      const keyboard = window.innerHeight - viewport.height > KEYBOARD_MIN_PX
-      overlay.toggleAttribute('data-keyboard', keyboard)
+      const keyboard = Math.max(0, window.innerHeight - viewport.height)
+      const open = keyboard > KEYBOARD_MIN_PX
+      overlay.style.setProperty('--keyboard-height', `${open ? keyboard : 0}px`)
+      overlay.toggleAttribute('data-keyboard', open)
+      if (!open) return
+      // iOS pushes the page up to reveal the field: keep the sheet in place instead,
+      // and scroll the field into view inside it.
+      if (window.scrollY !== 0) window.scrollTo(0, 0)
+      const field = document.activeElement
+      if (field instanceof HTMLElement && sheet.contains(field)) {
+        field.scrollIntoView({ block: 'nearest' })
+      }
     }
     update()
     viewport.addEventListener('resize', update)
     viewport.addEventListener('scroll', update)
+    sheet.addEventListener('focusin', update)
     return () => {
       viewport.removeEventListener('resize', update)
       viewport.removeEventListener('scroll', update)
+      sheet.removeEventListener('focusin', update)
     }
   }, [])
 

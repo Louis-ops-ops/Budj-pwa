@@ -330,6 +330,7 @@
     --bg-brand-muted: var(--p-dark-bg-brand-muted);
     --bg-brand-strong: var(--p-dark-bg-brand-strong);
     --bg-accent: var(--p-dark-bg-accent);
+    --brand-logo: var(--p-dark-bg-accent);
     --bg-icon-button: var(--p-dark-bg-icon-button);
     --bg-nav-action: var(--p-dark-bg-nav-action);
     --bg-nav-active: var(--p-dark-bg-nav-active);
@@ -461,6 +462,7 @@
   --bg-brand-muted: var(--p-dark-bg-brand-muted);
   --bg-brand-strong: var(--p-dark-bg-brand-strong);
   --bg-accent: var(--p-dark-bg-accent);
+  --brand-logo: var(--p-dark-bg-accent);
   --bg-icon-button: var(--p-dark-bg-icon-button);
   --bg-nav-action: var(--p-dark-bg-nav-action);
   --bg-nav-active: var(--p-dark-bg-nav-active);

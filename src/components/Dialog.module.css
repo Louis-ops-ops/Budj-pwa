@@ -118,11 +118,7 @@
 }
 
 @media (max-width: 1023px) {
-  /* Sized on the visual viewport (set by Dialog), which ends above the keyboard. */
   .overlay {
-    inset: auto 0;
-    top: var(--viewport-top, 0);
-    height: var(--viewport-height, 100dvh);
     align-items: flex-end;
     padding: 0;
     animation-duration: var(--motion-sheet-in);
@@ -174,12 +170,13 @@
     animation-name: sheetOut;
   }
 
-  /* Keyboard open: the sheet grows to the top and scrolls as a whole,
-     with room at the bottom for the iOS form bar. */
+  /* Keyboard open: it goes over the sheet, which grows to the top and scrolls
+     as a whole, with room at the bottom for the keyboard and its iOS form bar. */
   .overlay[data-keyboard] .dialog {
     height: calc(100% - var(--safe-top) - var(--space-12));
     overflow-y: auto;
-    padding-bottom: calc(var(--space-32) + var(--layout-keyboard-bar));
+    padding-bottom: calc(var(--keyboard-height) + var(--layout-keyboard-bar));
+    scroll-padding-bottom: calc(var(--keyboard-height) + var(--layout-keyboard-bar));
   }
 
   .overlay[data-keyboard] .body {

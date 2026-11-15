@@ -3,6 +3,7 @@ import { CATEGORY_COLORS, type CategoryColor } from '../shared/types'
 import { platform } from '../platform/storage'
 import { changeTheme, resolveTheme } from '../platform/theme'
 import { InstallHelp } from '../components/InstallHelp'
+import { useInstallMode } from '../platform/install'
 import { useBudj } from '../data/store'
 import { amountTextToCents, formatEuro, sanitizeAmountText } from '../data/money'
 import { AmountInput } from '../components/AmountInput'
@@ -48,7 +49,13 @@ const SUGGESTED: [string, CategoryColor][] = [
 
 export function Onboarding(): React.JSX.Element {
   const completeOnboarding = useBudj((s) => s.completeOnboarding)
-  const [step, setStep] = useState(1)
+  // In a browser tab, a first screen explains how to install (decided once, so the
+  // steps do not shift if the install prompt arrives later).
+  const installMode = useInstallMode()
+  const [firstStep] = useState(installMode === 'ios' || installMode === 'prompt' ? 0 : 1)
+  const [step, setStep] = useState(firstStep)
+  const stepCount = 5 - firstStep
+  const stepNumber = step - firstStep + 1
   const [theme, setTheme] = useState<ThemeChoice>('light')
 
   useEffect(() => {
@@ -103,6 +110,10 @@ export function Onboarding(): React.JSX.Element {
     setCategories((lines) => lines.map((l) => (l.key === key ? { ...l, ...patch } : l)))
 
   const titles: Record<number, [string, string]> = {
+    0: [
+      'Installe Budj',
+      'Ajoute Budj à ton écran d’accueil, puis ouvre-le depuis son icône pour faire la configuration. Tes données sont gardées dans l’app installée.'
+    ],
     1: ['Ton thème', 'Choisis l’apparence de Budj. Tu pourras la changer dans les Réglages.'],
     2: ['Ton budget mensuel', 'Tout ce que tu peux dépenser ce mois-ci, dépenses fixes comprises.'],
     3: [
@@ -121,7 +132,8 @@ export function Onboarding(): React.JSX.Element {
         className={styles.card}
         onSubmit={(e) => {
           e.preventDefault()
-          if (step === 1) setStep(2)
+          if (step === 0) setStep(1)
+          else if (step === 1) setStep(2)
           else if (step === 2 && budgetCents > 0) setStep(3)
           else if (step === 3) setStep(4)
           else if (step === 4 && !hasDuplicates) finish()
@@ -134,15 +146,15 @@ export function Onboarding(): React.JSX.Element {
           </Text>
           <div className={styles.steps}>
             <div className={styles.dots} aria-hidden="true">
-              {[1, 2, 3, 4].map((n) => (
+              {Array.from({ length: stepCount }, (_, i) => i + 1).map((n) => (
                 <span
                   key={n}
-                  className={[styles.dot, n <= step ? styles.dotActive : ''].join(' ')}
+                  className={[styles.dot, n <= stepNumber ? styles.dotActive : ''].join(' ')}
                 />
               ))}
             </div>
             <Text variant="label-medium" as="span">
-              {step} sur 4
+              {stepNumber} sur {stepCount}
             </Text>
           </div>
         </div>
@@ -156,10 +168,15 @@ export function Onboarding(): React.JSX.Element {
           </Text>
         </div>
 
+        {step === 0 && (
+          <div className={styles.body}>
+            <InstallHelp />
+          </div>
+        )}
+
         {step === 1 && (
           <div className={styles.body}>
             <ThemePicker value={theme} onChange={chooseTheme} />
-            <InstallHelp />
           </div>
         )}
 
@@ -362,7 +379,7 @@ export function Onboarding(): React.JSX.Element {
         )}
 
         <div className={styles.footer}>
-          {step > 1 && <TextLink label="Retour" onClick={() => setStep(step - 1)} />}
+          {step > firstStep && <TextLink label="Retour" onClick={() => setStep(step - 1)} />}
           <div className={styles.footerButtons}>
             {step === 3 && (
               <Button
