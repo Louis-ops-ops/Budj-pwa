@@ -18,37 +18,65 @@
   overflow: visible;
 }
 
-/* The letter still to write. */
-.track {
-  fill: var(--bg-brand-subtle);
+/* Tiles pop in one after the other, from the bottom left. */
+.tile {
+  fill: var(--brand-logo);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop calc(var(--motion-splash) * 0.3) var(--ease-smooth) backwards;
 }
 
-.stroke {
+.tile[data-step='1'] {
+  animation-delay: calc(var(--motion-splash) * 0.08);
+}
+
+.tile[data-step='2'] {
+  animation-delay: calc(var(--motion-splash) * 0.16);
+}
+
+.tile[data-step='3'] {
+  animation-delay: calc(var(--motion-splash) * 0.24);
+}
+
+/* Then the arrow is cut into the last tile. */
+.arrow {
   fill: none;
-  stroke: var(--bg-accent);
-  stroke-width: 72;
-  stroke-linecap: square;
+  stroke: var(--bg-app);
+  stroke-width: 19.52;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-dasharray: 1 1;
   stroke-dashoffset: 1;
-  animation: write var(--ease-smooth) forwards;
+  /* Hidden until drawn: a round cap would show a dot at the start. */
+  opacity: 0;
+  animation: draw calc(var(--motion-splash) * 0.26) var(--ease-smooth) forwards;
+  animation-delay: calc(var(--motion-splash) * 0.52);
 }
 
-.stroke[data-step='0'] {
-  animation-duration: calc(var(--motion-splash) * 0.3);
+.arrow[data-step='1'],
+.arrow[data-step='2'] {
+  animation-duration: calc(var(--motion-splash) * 0.22);
+  animation-delay: calc(var(--motion-splash) * 0.78);
 }
 
-.stroke[data-step='1'] {
-  animation-duration: calc(var(--motion-splash) * 0.32);
-  animation-delay: calc(var(--motion-splash) * 0.3);
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
 }
 
-.stroke[data-step='2'] {
-  animation-duration: calc(var(--motion-splash) * 0.38);
-  animation-delay: calc(var(--motion-splash) * 0.62);
-}
+@keyframes draw {
+  0% {
+    opacity: 0;
+  }
 
-@keyframes write {
-  to {
+  1%,
+  100% {
+    opacity: 1;
+  }
+
+  100% {
     stroke-dashoffset: 0;
   }
 }
