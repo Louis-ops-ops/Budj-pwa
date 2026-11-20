@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import type { Category } from '../shared/types'
 import { categoryPaint } from '../data/colors'
 import { monthOf, todayISO } from '../data/dates'
-import { formatEuroFloor, formatEuroShort } from '../data/money'
+import { formatEuroFloor, formatEuroShort, formatNumber } from '../data/money'
 import * as sel from '../data/selectors'
 import { useBudj } from '../data/store'
 import { useUi } from '../ui/uiStore'
@@ -30,6 +30,9 @@ export function MyBudgetMobile(): React.JSX.Element {
   const shownRemaining = useCountUp(remaining)
   const statuses = sel.categoryStatuses(data, month)
   const groups = sel.fixedGroups(data, month)
+  const onTrack = statuses.filter((s) => !s.over)
+  const over = statuses.filter((s) => s.over)
+  const uncategorized = sel.categorySpent(data, month, null)
 
   const confirmDelete = (category: Category): void => {
     const count = data.expenses.filter((e) => e.categoryId === category.id).length
@@ -48,12 +51,55 @@ export function MyBudgetMobile(): React.JSX.Element {
     })
   }
 
+  /** Figma: Carte catégorie (365:435). Over budget: spent in red, else remaining. */
+  const renderCategory = (s: sel.CategoryStatus): React.JSX.Element => {
+    const paint = categoryPaint(s.category)
+    return (
+      <button
+        key={s.category.id}
+        type="button"
+        className={styles.card}
+        style={{ '--card-bg': paint.bg, '--card-fg': paint.fg } as CSSProperties}
+        aria-label={deleting ? `Supprimer ${s.category.name}` : undefined}
+        onClick={() =>
+          deleting ? confirmDelete(s.category) : navigate(`/categories/${s.category.id}`)
+        }
+      >
+        <span className={styles.cardRow}>
+          <Text variant="h2" as="span" className={styles.cardName}>
+            {s.category.name}
+          </Text>
+          {deleting ? (
+            <Icon name="delete" size={20} className={styles.deleteIcon} />
+          ) : (
+            <span className={styles.cardAmount}>
+              <Text
+                variant="h2"
+                as="span"
+                tabular
+                className={s.over ? styles.dangerText : undefined}
+              >
+                {formatEuroFloor(s.over ? s.spent : s.remaining)}
+              </Text>
+              <Text variant="body-regular" as="span" tabular>
+                /{formatNumber(Math.floor(s.budget / 100))}
+              </Text>
+            </span>
+          )}
+        </span>
+      </button>
+    )
+  }
+
   return (
     <MobilePage>
-      <header className={styles.header}>
-        <div className={styles.headerRow}>
-          <Text variant="h1" as="h1">
-            Mon budget
+      <header className={styles.headerRow}>
+        <Text variant="h1" as="h1">
+          Mon budget
+        </Text>
+        <div className={styles.headActions}>
+          <Text variant="h1" color="brand-faint" as="span" tabular>
+            {formatEuroShort(sel.monthBudget(data, month))}
           </Text>
           <IconButton
             icon="edit"
@@ -61,22 +107,14 @@ export function MyBudgetMobile(): React.JSX.Element {
             onClick={() => openDialog({ kind: 'budget' })}
           />
         </div>
-        <div className={styles.spread}>
-          <Text variant="body-regular" color="brand-faint" as="span">
-            Budget défini de
-          </Text>
-          <Text variant="body-regular" color="brand-faint" as="span" tabular>
-            {formatEuroShort(sel.monthBudget(data, month))}
-          </Text>
-        </div>
       </header>
 
       <div className={styles.amountLine}>
         <Text
-          variant="display-l"
+          variant="display-xl"
           color={remaining < 0 ? 'danger' : 'brand'}
           tabular
-          className={styles.amount}
+          className={`${styles.amount} ${styles.amountBold}`}
         >
           {formatEuroFloor(Math.abs(shownRemaining))}
         </Text>
@@ -120,10 +158,10 @@ export function MyBudgetMobile(): React.JSX.Element {
           onClick={() => navigate('/fixes/liste')}
         >
           <span className={styles.spread}>
-            <Text variant="h2" as="span">
+            <Text variant="h1" as="span">
               Dépenses fixes
             </Text>
-            <Text variant="body-medium" as="span" tabular>
+            <Text variant="h1" as="span" tabular>
               {formatEuroFloor(sel.fixedTotal(data, month))}
             </Text>
           </span>
@@ -143,54 +181,30 @@ export function MyBudgetMobile(): React.JSX.Element {
           )}
         </button>
 
-        {statuses.map((s) => {
-          const paint = categoryPaint(s.category)
-          return (
-            <button
-              key={s.category.id}
-              type="button"
-              className={styles.card}
-              style={{ '--card-bg': paint.bg, '--card-fg': paint.fg } as CSSProperties}
-              aria-label={deleting ? `Supprimer ${s.category.name}` : undefined}
-              onClick={() =>
-                deleting ? confirmDelete(s.category) : navigate(`/categories/${s.category.id}`)
-              }
-            >
-              {deleting ? (
-                <span className={styles.cardRow}>
-                  <Text variant="h3" as="span" className={styles.cardName}>
-                    {s.category.name}
-                  </Text>
-                  <Icon name="delete" size={20} className={styles.deleteIcon} />
-                </span>
-              ) : (
-                <span className={styles.cardBody}>
-                  <span className={styles.spread}>
-                    <Text variant="h3" as="span">
-                      {s.category.name}
-                    </Text>
-                    <Text
-                      variant="h3"
-                      as="span"
-                      tabular
-                      className={s.over ? styles.dangerText : undefined}
-                    >
-                      {formatEuroFloor(Math.abs(s.remaining))}
-                    </Text>
-                  </span>
-                  <span className={styles.spread}>
-                    <Text variant="label-regular" as="span">
-                      {s.over ? 'Dépassé, budget alloué' : 'Budget alloué'}
-                    </Text>
-                    <Text variant="label-regular" as="span" tabular>
-                      {formatEuroShort(s.budget)}
-                    </Text>
-                  </span>
-                </span>
-              )}
-            </button>
-          )
-        })}
+        {(deleting ? statuses : onTrack).map((s) => renderCategory(s))}
+
+        {!deleting && uncategorized > 0 && (
+          <button
+            type="button"
+            className={styles.card}
+            style={
+              {
+                '--card-bg': 'var(--category-gris-bg)',
+                '--card-fg': 'var(--category-gris-fg)'
+              } as CSSProperties
+            }
+            onClick={() => navigate('/historique', { state: { filter: 'none' } })}
+          >
+            <span className={styles.cardRow}>
+              <Text variant="h2" as="span" className={styles.cardName}>
+                À catégoriser
+              </Text>
+              <Text variant="h2" as="span" tabular>
+                {formatEuroFloor(uncategorized)}
+              </Text>
+            </span>
+          </button>
+        )}
 
         {statuses.length === 0 && (
           <EmptyState
@@ -202,6 +216,14 @@ export function MyBudgetMobile(): React.JSX.Element {
         )}
       </div>
 
+      {!deleting && over.length > 0 && (
+        <section className={styles.list} aria-label="Budget dépassé">
+          <Text variant="h2" as="h3" className={styles.primaryText}>
+            Budget dépassé
+          </Text>
+          {over.map((s) => renderCategory(s))}
+        </section>
+      )}
     </MobilePage>
   )
 }

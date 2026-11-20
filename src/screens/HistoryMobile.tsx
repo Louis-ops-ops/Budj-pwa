@@ -1,4 +1,5 @@
 import { useState, type CSSProperties, type ReactNode } from 'react'
+import { useLocation } from 'react-router'
 import type { Expense, FixedExpense } from '../shared/types'
 import { categoryPaint } from '../data/colors'
 import { addMonths, formatLongDay, formatMonthName } from '../data/dates'
@@ -43,7 +44,9 @@ export function HistoryMobile({
 }: HistoryMobileProps): React.JSX.Element {
   const data = useBudj((s) => s.data)
   const openDialog = useUi((s) => s.openDialog)
-  const [filter, setFilter] = useState<sel.HistoryFilter>(null)
+  // The « À catégoriser » card of the home screen opens the history on that filter.
+  const initialFilter = (useLocation().state as { filter?: sel.HistoryFilter } | null)?.filter
+  const [filter, setFilter] = useState<sel.HistoryFilter>(initialFilter ?? null)
   const [openId, setOpenId] = useState<string | null>(null)
 
   const breakdown = sel.spendingBreakdown(data, month, today)

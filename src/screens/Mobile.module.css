@@ -29,7 +29,13 @@
 
 .headActions {
   display: flex;
+  align-items: center;
   gap: var(--space-12);
+}
+
+/* Figma: Display/XL in bold on the home screen. */
+.amountBold {
+  font-weight: var(--font-weight-bold);
 }
 
 .amount {
@@ -48,7 +54,7 @@
   flex-direction: column;
   gap: var(--space-12);
   width: 100%;
-  padding: var(--space-12);
+  padding: var(--space-16) var(--space-12);
   border-radius: var(--radius-md);
   background: var(--card-bg);
   color: var(--card-fg);
@@ -59,13 +65,21 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  color: var(--text-brand-subtle);
+  color: var(--text-brand-faint);
 }
 
 .cardRow {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: var(--space-12);
+}
+
+.cardAmount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .cardRow > .spread {
@@ -402,6 +416,9 @@
 .cardName {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .allFixed {

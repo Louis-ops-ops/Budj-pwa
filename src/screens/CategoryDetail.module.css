@@ -216,6 +216,7 @@
   /* Floating panel over the tab bar (Figma: 240:1918). */
   .selectionBar {
     position: fixed;
+    z-index: 2;
     left: var(--space-12);
     right: var(--space-12);
     bottom: max(var(--safe-bottom), var(--space-12));
