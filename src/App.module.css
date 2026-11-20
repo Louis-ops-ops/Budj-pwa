@@ -48,8 +48,6 @@
 
 @media (max-width: 1023px) {
   .shell {
-    position: relative;
-    isolation: isolate;
     flex-direction: column;
   }
 

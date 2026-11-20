@@ -45,7 +45,7 @@
   .host {
     left: var(--space-16);
     right: var(--space-16);
-    bottom: calc(var(--layout-tabbar-room) + var(--space-18));
+    bottom: calc(max(var(--safe-bottom), var(--layout-screen-margin)) + var(--layout-control) * 2);
     align-items: center;
   }
 }

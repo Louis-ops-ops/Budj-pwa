@@ -1,23 +1,12 @@
-/* Figma: Nav bar (187:1482). Floats over the screen, frosted glass: the page scrolls under it. */
+/* Figma: Nav bar (187:1482) */
 .container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
   display: flex;
   align-items: center;
   gap: var(--space-12);
+  flex-shrink: 0;
   padding: var(--space-18) var(--layout-screen-margin)
     max(var(--safe-bottom), var(--layout-screen-margin));
-  pointer-events: none;
-}
-
-.add,
-.tabs {
-  pointer-events: auto;
-  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(180%);
-  backdrop-filter: blur(var(--blur-glass)) saturate(180%);
+  background: var(--bg-app);
 }
 
 .add {
@@ -29,7 +18,7 @@
   flex-shrink: 0;
   border-radius: var(--radius-full);
   border: var(--layout-border) solid var(--border-brand);
-  background: linear-gradient(var(--bg-nav-action), var(--bg-nav-action)), var(--bg-glass);
+  background: var(--bg-nav-action);
   color: var(--icon-brand);
 }
 
@@ -42,7 +31,7 @@
   height: var(--layout-control);
   padding: 0 var(--space-8);
   border-radius: var(--radius-full);
-  background: linear-gradient(var(--bg-nav-action), var(--bg-nav-action)), var(--bg-glass);
+  background: var(--bg-nav-action);
 }
 
 .item {

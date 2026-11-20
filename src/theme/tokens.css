@@ -62,7 +62,6 @@
   --p-alpha-blue-300-30: #aab4ff4d;
   --p-alpha-white-10: #ffffff1a;
   --p-alpha-white-70: #ffffffb3;
-  --p-alpha-white-60: #ffffff99;
   --p-alpha-green-700-30: #116d094d;
   --p-alpha-red-700-30: #6d090b4d;
   --p-alpha-black-25: #00000040;
@@ -121,7 +120,6 @@
   --p-dark-category-bleu-fg: #c9ccf6;
   --p-dark-category-gris-bg: #222226;
   --p-dark-category-gris-fg: #c4c4c8;
-  --p-dark-bg-glass: #060606a6;
   --p-dark-effect-shadow: #00000040;
 
   /* ---------- Semantic colors: light ---------- */
@@ -184,7 +182,6 @@
   --category-bleu-fg: var(--p-blue-950);
   --category-gris-bg: var(--p-neutral-200);
   --category-gris-fg: var(--p-neutral-700);
-  --bg-glass: var(--p-alpha-white-60);
 
   --effect-shadow: var(--p-alpha-black-25);
 
@@ -273,11 +270,6 @@
   --layout-row-upcoming: 64px;
   --layout-row-expense: 56px;
   --layout-control: 44px;
-  --blur-glass: 20px;
-  /* Height of the floating mobile tab bar, safe area included. */
-  --layout-tabbar-room: calc(
-    var(--space-18) + var(--layout-control) + max(var(--safe-bottom), var(--layout-screen-margin))
-  );
   --layout-chip: 32px;
   --layout-avatar: 40px;
   --layout-gauge: 8px;
@@ -387,7 +379,6 @@
     --category-bleu-fg: var(--p-dark-category-bleu-fg);
     --category-gris-bg: var(--p-dark-category-gris-bg);
     --category-gris-fg: var(--p-dark-category-gris-fg);
-    --bg-glass: var(--p-dark-bg-glass);
     --effect-shadow: var(--p-dark-effect-shadow);
     --bg-overlay: var(--p-alpha-black-60);
   }
@@ -466,7 +457,6 @@
   --category-bleu-fg: var(--p-blue-950);
   --category-gris-bg: var(--p-neutral-200);
   --category-gris-fg: var(--p-neutral-700);
-  --bg-glass: var(--p-alpha-white-60);
 
   --effect-shadow: var(--p-alpha-black-25);
 }
@@ -525,7 +515,6 @@
   --category-bleu-fg: var(--p-dark-category-bleu-fg);
   --category-gris-bg: var(--p-dark-category-gris-bg);
   --category-gris-fg: var(--p-dark-category-gris-fg);
-  --bg-glass: var(--p-dark-bg-glass);
   --effect-shadow: var(--p-dark-effect-shadow);
   --bg-overlay: var(--p-alpha-black-60);
 }

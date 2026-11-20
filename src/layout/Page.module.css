@@ -17,9 +17,8 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  /* Bottom: room for the floating tab bar. */
   padding: calc(var(--safe-top) + var(--layout-screen-top)) var(--layout-screen-margin)
-    calc(var(--layout-tabbar-room) + var(--space-18));
+    var(--space-16);
 }
 
 .header {
