@@ -1,7 +1,7 @@
 /* Dialog: centered modal (desktop pop-up template, Figma 290:2198). */
 .overlay {
   position: fixed;
-  inset: 0;
+  inset: 0 0 calc(-1 * var(--viewport-gap));
   z-index: var(--z-sheet);
   display: flex;
   align-items: center;

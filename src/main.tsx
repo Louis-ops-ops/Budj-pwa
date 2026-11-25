@@ -4,8 +4,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import { syncTheme } from './platform/theme'
+import { syncViewport } from './platform/viewport'
 
 syncTheme()
+syncViewport()
 
 // iOS keeps the keyboard open until another field takes the focus: a tap on
 // anything that is not a control closes it. Controls keep it, so a tap on a
