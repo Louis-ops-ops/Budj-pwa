@@ -5,11 +5,14 @@ import { formatBytes } from '../../data/format'
 import { InstallHelp } from '../../components/InstallHelp'
 import { Text } from '../../components/Text'
 import { ListGroup, ListSection, MenuRow, Row, SwitchRow } from './List'
+import { isBadgeOn, toggleBadge } from '../../platform/viewport'
+import { useState } from 'react'
 import styles from './SettingsList.module.css'
 
 export function SettingsList(): React.JSX.Element {
   const s = useSettings()
   const { reminders, actions } = s
+  const [badge, setBadge] = useState(isBadgeOn)
 
   return (
     <div className={styles.list}>
@@ -99,6 +102,12 @@ export function SettingsList(): React.JSX.Element {
           <Row title="Version" trailing={s.version} />
           <Row title="Écran (diagnostic)" subtitle={s.viewport[0]} />
           <Row title="Barre d’état (diagnostic)" subtitle={s.viewport[1]} />
+          <SwitchRow
+            label="Mesures en direct (diagnostic)"
+            hint="Affiche les hauteurs en haut de l’écran pendant que tu navigues"
+            checked={badge}
+            onChange={() => setBadge(toggleBadge())}
+          />
           <Row
             title="Confidentialité"
             subtitle="Pas de compte, pas de serveur, aucune donnée envoyée."
