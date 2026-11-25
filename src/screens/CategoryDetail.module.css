@@ -204,7 +204,7 @@
   .selectionBar {
     position: fixed;
     right: 0;
-    bottom: calc(-1 * var(--viewport-gap));
+    bottom: 0;
     left: 0;
     z-index: 10;
     margin: 0;
@@ -232,7 +232,7 @@
     position: fixed;
     left: var(--space-12);
     right: var(--space-12);
-    bottom: calc(max(var(--safe-bottom), var(--space-12)) - var(--viewport-gap));
+    bottom: max(var(--safe-bottom), var(--space-12));
     margin: 0;
     border-radius: var(--radius-lg);
     background: var(--bg-surface);

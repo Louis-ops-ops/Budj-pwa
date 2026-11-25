@@ -256,8 +256,6 @@
   --layout-sheet-gap: 12px;
   --safe-top: env(safe-area-inset-top);
   --safe-bottom: env(safe-area-inset-bottom);
-  /* Set by platform/viewport.ts when iOS shortens the viewport. */
-  --viewport-gap: 0px;
   --display-l-fluid: 21vw;
   --display-xl-fluid: 24vw;
   --display-m-fluid: 15vw;
