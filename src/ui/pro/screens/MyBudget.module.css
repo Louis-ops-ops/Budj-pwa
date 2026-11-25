@@ -1,0 +1,4 @@
+.empty {
+  padding: var(--space-12) var(--space-16);
+  color: var(--text-secondary);
+}

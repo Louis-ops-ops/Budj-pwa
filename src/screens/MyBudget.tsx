@@ -27,7 +27,7 @@ import { UpcomingCharge } from '../components/UpcomingCharge'
 import { initialOf } from '../data/format'
 import { categoryPaint } from '../data/colors'
 import { useIsMobile } from '../ui/useIsMobile'
-import { MyBudgetMobile } from './MyBudgetMobile'
+import { MyBudget as MyBudgetMobile } from '../ui/playfull/screens/MyBudget'
 import styles from './MyBudget.module.css'
 
 const plural = (n: number, one: string, many: string): string => `${n} ${n > 1 ? many : one}`

@@ -31,7 +31,8 @@ import styles from './FixedExpenses.module.css'
 const plural = (n: number, one: string, many: string): string => `${n} ${n > 1 ? many : one}`
 const dayLabel = (d: number): string => `Le ${d === 1 ? '1er' : d}`
 
-export function FixedExpenses({ list }: { list?: boolean }): React.JSX.Element {
+/** v3 §7.6: the Fixes tab is the list; the month calendar is a pushed screen. */
+export function FixedExpenses({ calendar }: { calendar?: boolean }): React.JSX.Element {
   const isMobile = useIsMobile()
   const data = useBudj((s) => s.data)
   const month = useUi((s) => s.month)
@@ -44,8 +45,8 @@ export function FixedExpenses({ list }: { list?: boolean }): React.JSX.Element {
     picked?.month === month ? picked.day : sel.defaultCalendarDay(data, month, today)
 
   if (isMobile) {
-    return list ? (
-      <FixedListMobile month={month} today={today} />
+    return !calendar ? (
+      <FixedListMobile month={sel.currentMonth(data, today)} today={today} />
     ) : (
       <FixedCalendarMobile
         month={month}
@@ -188,7 +189,7 @@ function FixedExpensesContent({
                   {g.items.map((f) => (
                     <FixedRow
                       key={f.id}
-                      status={sel.isFixedPaid(f, month, today) ? 'paid' : 'upcoming'}
+                      status={sel.isFixedPaid(data, f, month, today) ? 'paid' : 'upcoming'}
                       name={f.label}
                       initial={initialOf(f.label)}
                       day={dayLabel(sel.chargeDay(f, month))}
@@ -242,7 +243,7 @@ function FixedExpensesContent({
             {ofDay.map((f) => (
               <UpcomingCharge
                 key={f.id}
-                highlighted={!sel.isFixedPaid(f, month, today)}
+                highlighted={!sel.isFixedPaid(data, f, month, today)}
                 name={f.label}
                 initial={initialOf(f.label)}
                 amount={formatEuro(-f.amount)}

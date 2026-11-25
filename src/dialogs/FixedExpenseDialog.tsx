@@ -12,6 +12,15 @@ import { Text } from '../components/Text'
 import { TextLink } from '../components/TextLink'
 import { DayPicker } from '../components/DayPicker'
 import { useIsMobile } from '../ui/useIsMobile'
+import {
+  AmountHint,
+  ChipRow,
+  FormCard,
+  SheetAmount,
+  SheetBlock,
+  TextRow,
+  ValueRow
+} from '../ui/shared/SheetParts'
 import styles from './Dialogs.module.css'
 
 const DAYS = Array.from({ length: 31 }, (_, i) => ({
@@ -87,21 +96,93 @@ export function FixedExpenseDialog({
     })
   }
 
+  const subcategoryChips = (Wrap: typeof ChipList | typeof ChipRow): React.JSX.Element => (
+    <Wrap label="Sous-catégorie">
+      {data.fixedSubcategories.map((s) => (
+        <CategoryChip
+          key={s.id}
+          label={s.name}
+          color="bleu"
+          selected={s.id === subcategoryId}
+          onClick={() => setSubcategoryId(s.id)}
+        />
+      ))}
+      <AddChip
+        label="Nouvelle"
+        onClick={() =>
+          openDialog({ kind: 'newSubcategory', onCreated: (id) => setSubcategoryId(id) })
+        }
+      />
+    </Wrap>
+  )
+
+  const historyNote = hasHistory && (
+    <Text variant="label-regular" color="tertiary">
+      Les changements s’appliquent à partir de ce mois-ci. Les mois passés gardent l’ancien
+      montant.
+    </Text>
+  )
+
+  if (isMobile) {
+    return (
+      <Dialog
+        title={fixed ? 'Modifier la dépense fixe' : 'Nouvelle dépense fixe'}
+        onClose={onClose}
+        onSubmit={submit}
+        submitLabel={fixed ? 'Enregistrer' : 'Ajouter la dépense fixe'}
+        submitDisabled={!valid}
+        footerStart={
+          fixed && <TextLink label="Supprimer" icon="delete" tone="danger" onClick={remove} />
+        }
+      >
+        <SheetAmount
+          below={
+            cents > 0 ? (
+              <AmountHint>Soit {formatEuro(cents * 12)} par an</AmountHint>
+            ) : (
+              <AmountHint>Saisis le montant prélevé chaque mois</AmountHint>
+            )
+          }
+        >
+          <AmountInput value={amount} onChange={setAmount} label="Montant mensuel" autoFocus />
+        </SheetAmount>
+        <FormCard>
+          <TextRow
+            label="Libellé"
+            value={label}
+            onChange={setLabel}
+            placeholder="Ex : Netflix, loyer…"
+            maxLength={40}
+          />
+          <ValueRow
+            label="Prélèvement"
+            value={`Le ${dayNumber === 1 ? '1er' : dayNumber} de chaque mois`}
+            tone="brand"
+          />
+        </FormCard>
+        <SheetBlock title="Jour de prélèvement">
+          <DayPicker value={dayNumber} onChange={(d) => setDay(String(d))} />
+        </SheetBlock>
+        <SheetBlock title="Sous-catégorie">{subcategoryChips(ChipRow)}</SheetBlock>
+        {historyNote}
+      </Dialog>
+    )
+  }
+
   return (
     <Dialog
       title={fixed ? 'Modifier la dépense fixe' : 'Nouvelle dépense fixe'}
       onClose={onClose}
       onSubmit={submit}
       submitLabel={fixed ? 'Enregistrer' : 'Ajouter la dépense fixe'}
-      submitIcon={isMobile && !fixed ? 'add' : undefined}
       submitDisabled={!valid}
       footerStart={
         fixed && <TextLink label="Supprimer" icon="delete" tone="danger" onClick={remove} />
       }
     >
-      <div className={isMobile ? styles.amountBlock : styles.group}>
+      <div className={styles.group}>
         <AmountInput value={amount} onChange={setAmount} label="Montant mensuel" autoFocus />
-        <Text variant="label-regular" className={isMobile ? styles.annualCost : styles.current}>
+        <Text variant="label-regular" className={styles.current}>
           {cents > 0 ? (
             <>
               Soit <strong className="t-label-bold tabular">{formatEuro(cents * 12)}</strong> par an
@@ -120,58 +201,22 @@ export function FixedExpenseDialog({
           placeholder="Ex. Netflix"
           maxLength={40}
         />
-        {!isMobile && (
-          <div className={styles.paymentField}>
-            <SelectField label="Jour du prélèvement" value={day} options={DAYS} onChange={setDay} />
-          </div>
-        )}
+        <div className={styles.paymentField}>
+          <SelectField label="Jour du prélèvement" value={day} options={DAYS} onChange={setDay} />
+        </div>
       </div>
 
-      {isMobile && (
-        <div className={styles.group}>
-          <div className={styles.previewLine}>
-            <Text variant="label-medium" color="brand" as="span">
-              Jour du prélèvement
-            </Text>
-            <Text variant="label-regular" color="secondary" as="span">
-              Le {dayNumber === 1 ? '1er' : dayNumber} de chaque mois
-            </Text>
-          </div>
-          <DayPicker value={dayNumber} onChange={(d) => setDay(String(d))} />
-        </div>
-      )}
 
       <div className={styles.group}>
         <Text variant="label-medium" className={styles.groupLabel}>
           Sous-catégorie
         </Text>
-        <ChipList label="Sous-catégorie">
-          {data.fixedSubcategories.map((s) => (
-            <CategoryChip
-              key={s.id}
-              label={s.name}
-              color="bleu"
-              selected={s.id === subcategoryId}
-              onClick={() => setSubcategoryId(s.id)}
-            />
-          ))}
-          <AddChip
-            label="Nouvelle"
-            onClick={() =>
-              openDialog({ kind: 'newSubcategory', onCreated: (id) => setSubcategoryId(id) })
-            }
-          />
-        </ChipList>
+        {subcategoryChips(ChipList)}
       </div>
 
-      {hasHistory && (
-        <Text variant="label-regular" color="tertiary">
-          Les changements s’appliquent à partir de ce mois-ci. Les mois passés gardent l’ancien
-          montant.
-        </Text>
-      )}
+      {historyNote}
 
-      {valid && !isMobile && (
+      {valid && (
         <div className={styles.preview}>
           <div className={styles.previewLine}>
             <Text variant="body-medium" as="span">

@@ -3,11 +3,11 @@ import { Icon, type IconName } from './Icon'
 import styles from './TabBar.module.css'
 
 const TABS: { to: string; label: string; icon: IconName; activeFor?: RegExp }[] = [
-  { to: '/', label: 'Catégories', icon: 'categories', activeFor: /^\/(categories|fixes\/liste)/ },
+  { to: '/', label: 'Catégories', icon: 'categories', activeFor: /^\/(categories|fixes\/liste|budget)/ },
   { to: '/fixes', label: 'Fixes', icon: 'calendar' },
   { to: '/historique', label: 'Historique', icon: 'history' },
   { to: '/evolution', label: 'Évolution', icon: 'trendUp', activeFor: /^\/evolution/ },
-  { to: '/reglages', label: 'Réglages', icon: 'settings' }
+  { to: '/profil', label: 'Profil', icon: 'profile', activeFor: /^\/(profil|reglages)/ }
 ]
 
 /** Bottom navigation below the desktop breakpoint (Figma: Nav bar 187:1482). */

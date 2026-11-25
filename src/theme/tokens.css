@@ -312,6 +312,11 @@
   --motion-count-delay: 200ms;
   --motion-splash: 1200ms;
   --layout-splash-logo: 96px;
+  /* Launch screen: above everything, the Pro tab bar included. */
+  /* Sheets above the fixed tab bars (10), toasts above the sheets. */
+  --z-sheet: 50;
+  --z-toast: 60;
+  --z-splash: 100;
   --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
   /* Room under the sheet content for the iOS form bar above the keyboard. */
@@ -321,7 +326,84 @@
   --outside-opacity: 0.3;
   --past-opacity: 0.35;
 
+  /* ---------- UI style (v3 §3.2): rare token differences between Playfull and Pro ---------- */
+  --sheet-radius: var(--radius-lg);
+
+  /* ---------- Pro: hero gradients built on semantic tokens, they follow the theme ---------- */
+  --pro-hero-home: linear-gradient(
+    180deg,
+    var(--bg-accent) 0%,
+    var(--bg-brand-strong) 38%,
+    var(--bg-brand-subtle) 75%,
+    var(--bg-app) 100%
+  );
+  --pro-hero-fixed: linear-gradient(
+    180deg,
+    var(--bg-brand-strong) 0%,
+    var(--bg-brand-muted) 40%,
+    var(--bg-brand-subtle) 75%,
+    var(--bg-app) 100%
+  );
+  --pro-hero-history: linear-gradient(
+    180deg,
+    var(--bg-brand-muted) 0%,
+    var(--bg-brand-subtle) 45%,
+    var(--bg-app) 90%
+  );
+  --pro-hero-evolution: linear-gradient(
+    180deg,
+    var(--border-brand) 0%,
+    var(--bg-brand-strong) 32%,
+    var(--bg-brand-subtle) 70%,
+    var(--bg-app) 100%
+  );
+  --pro-fade-bottom: linear-gradient(180deg, transparent 0%, var(--bg-app) 55%);
+  --layout-pro-hero: 600px;
+  --layout-pro-top: 56px;
+  --layout-pro-bottom: 120px;
+  --layout-pro-fade: 140px;
+  --layout-pro-curve: 100px;
+  --layout-pro-dot: 12px;
+  --layout-pro-gauge: 4px;
+  --layout-pro-gauge-indent: 48px;
+  --layout-gauge-stroke: 2.5px;
+  --ideal-opacity: 0.7;
+  --layout-mini-chart: 96px;
+  --layout-amount-field: 96px;
+  --layout-progress: 4px;
+  --layout-checkbox: 24px;
+  --layout-round-action: 76px;
+  --layout-row-list: 60px;
+  --layout-row-form: 52px;
+  --layout-sort-avatar: 50px;
+  --layout-profile-avatar: 80px;
+  --layout-goal-tile: 48px;
+  --layout-goal-tile-height: 56px;
+  --layout-row-circle: 36px;
+  --layout-switch-width: 51px;
+  --layout-switch-height: 31px;
+  --layout-switch-knob: 27px;
+  --layout-switch-travel: 20px;
+  --layout-round-circle: 52px;
+  --font-size-hero: 128px;
+  --font-size-hero-unit: 48px;
+  --hero-fluid: 32vw;
+  --hero-unit-fluid: 12vw;
+  --layout-pro-fab: 64px;
+  --layout-pro-round: 40px;
+  --layout-pro-action: 56px;
   color-scheme: light dark;
+}
+
+[data-ui='pro'] {
+  --sheet-radius: var(--radius-xl);
+}
+
+/* Category hero: base bg → app, fg veil at 22 %. --cat-fg / --cat-bg are set on the screen. */
+[data-hero='category'] {
+  --pro-hero-category:
+    linear-gradient(180deg, color-mix(in srgb, var(--cat-fg) 22%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--cat-bg) 0%, var(--bg-app) 72%);
 }
 
 /* Must match [data-theme='dark'] below: tokens.test.ts compares the two blocks. */

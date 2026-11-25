@@ -1,11 +1,14 @@
 // Pure data transformations used by the store actions (testable without React).
 import type {
+  BudgetPeriod,
   BudjData,
   Category,
   Expense,
   FixedExpense,
-  FixedSubcategory
+  FixedSubcategory,
+  Settings
 } from '../shared/types'
+import { defaultSettings } from '../shared/migrate'
 import { addMonths } from './dates'
 
 export const DEFAULT_FIXED_SUBCATEGORIES = ['Épargne', 'Factures', 'Distractions']
@@ -29,10 +32,11 @@ export function stampChanges(prev: BudjData, next: BudjData, now: string): BudjD
   }
 }
 
-export function emptyData(): BudjData {
+export function emptyData(now = new Date().toISOString()): BudjData {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     onboardingDone: false,
+    settings: defaultSettings(now),
     budgetHistory: [],
     categories: [],
     fixedSubcategories: [],
@@ -41,13 +45,69 @@ export function emptyData(): BudjData {
   }
 }
 
+/** Period in effect for a month (months before the first period use the first one). */
+export function periodAt(data: BudjData, month: string): BudgetPeriod | null {
+  const history = data.budgetHistory
+  if (history.length === 0) return null
+  let period = history[0]
+  for (const p of history) {
+    if (p.fromMonth <= month) period = p
+    else break
+  }
+  return period
+}
+
+/**
+ * Changes the period starting at `month` (created from the one in effect if needed),
+ * so past months keep the budget and savings goal they really had.
+ */
+function setPeriod(
+  data: BudjData,
+  month: string,
+  patch: Partial<Pick<BudgetPeriod, 'amount' | 'savingsGoal'>>
+): BudjData {
+  const current = periodAt(data, month)
+  const next: BudgetPeriod = {
+    amount: current?.amount ?? 0,
+    savingsGoal: current?.savingsGoal ?? 0,
+    ...patch,
+    fromMonth: month,
+    updatedAt: ''
+  }
+  const others = data.budgetHistory.filter((p) => p.fromMonth !== month)
+  const budgetHistory = [...others, next].sort((a, b) => a.fromMonth.localeCompare(b.fromMonth))
+  return { ...data, budgetHistory }
+}
+
 /** Replaces or adds the budget period starting at `month`. */
 export function setMonthlyBudget(data: BudjData, amount: number, month: string): BudjData {
-  const others = data.budgetHistory.filter((p) => p.fromMonth !== month)
-  const budgetHistory = [...others, { fromMonth: month, amount, updatedAt: '' }].sort((a, b) =>
-    a.fromMonth.localeCompare(b.fromMonth)
-  )
-  return { ...data, budgetHistory }
+  return setPeriod(data, month, { amount })
+}
+
+/** Savings goal from `month` on (same history logic as the budget). */
+export function setSavingsGoal(data: BudjData, savingsGoal: number, month: string): BudjData {
+  return setPeriod(data, month, { savingsGoal })
+}
+
+export function updateSettings(data: BudjData, patch: Partial<Settings>): BudjData {
+  return { ...data, settings: { ...data.settings, ...patch } }
+}
+
+/** Next free position at the end of the category list. */
+export function nextCategoryOrder(data: BudjData): number {
+  return data.categories.reduce((max, c) => Math.max(max, c.order + 1), 0)
+}
+
+/** New order of the categories, by id (Gérer les catégories › Réorganiser). */
+export function reorderCategories(data: BudjData, ids: string[]): BudjData {
+  const position = new Map(ids.map((id, index) => [id, index]))
+  return {
+    ...data,
+    categories: data.categories.map((c) => {
+      const order = position.get(c.id) ?? ids.length + c.order
+      return order === c.order ? c : { ...c, order }
+    })
+  }
 }
 
 export function addExpenses(data: BudjData, expenses: Expense[]): BudjData {

@@ -10,7 +10,7 @@ import {
   formatEuroSigned,
   percent
 } from '../data/money'
-import { monthOf, todayISO } from '../data/dates'
+import { todayISO } from '../data/dates'
 import { Dialog } from '../components/Dialog'
 import { AmountInput } from '../components/AmountInput'
 import { CategoryChip } from '../components/Chip'
@@ -19,6 +19,14 @@ import { Text } from '../components/Text'
 import { categoryPaint } from '../data/colors'
 import { TextLink } from '../components/TextLink'
 import { useIsMobile } from '../ui/useIsMobile'
+import {
+  FormCard,
+  Note,
+  QuickSteps,
+  SheetAmount,
+  SheetBlock,
+  ValueRow
+} from '../ui/shared/SheetParts'
 import styles from './Dialogs.module.css'
 
 const STEPS = [-5000, -1000, 1000, 5000]
@@ -39,7 +47,7 @@ export function EditBudgetDialog({
   const updateCategory = useBudj((s) => s.updateCategory)
   const toast = useUi((s) => s.toast)
 
-  const month = monthOf(todayISO())
+  const month = sel.currentMonth(data, todayISO())
   const category = categoryId ? data.categories.find((c) => c.id === categoryId) : undefined
   const current = category ? category.monthlyBudget : sel.monthBudget(data, month)
   const [text, setText] = useState(current > 0 ? centsToInput(current) : '')
@@ -69,6 +77,71 @@ export function EditBudgetDialog({
     else setMonthlyBudget(next)
     toast('Budget enregistré')
     onClose()
+  }
+
+  if (isMobile) {
+    const breakdown = sel.budgetBreakdown(data, month)
+    const toAllocate = next - breakdown.fixed - breakdown.savings - breakdown.categories
+    return (
+      <Dialog
+        title={category ? `Budget de ${category.name}` : 'Budget mensuel'}
+        onClose={onClose}
+        onSubmit={submit}
+        submitLabel="Enregistrer"
+        submitDisabled={text === '' || diff === 0}
+      >
+        <SheetAmount
+          below={
+            <span className={styles.currentLine}>
+              <Text variant="label-regular" color="secondary" as="span" tabular>
+                Budget actuel : {formatEuroShort(current)}
+              </Text>
+              {diff !== 0 && text !== '' && (
+                <Note live tone={diff > 0 ? 'success' : 'danger'}>
+                  {formatEuroSigned(diff)}
+                </Note>
+              )}
+            </span>
+          }
+        >
+          <AmountInput
+            value={text}
+            onChange={setText}
+            label={category ? `Budget ${category.name}` : 'Budget mensuel'}
+            autoFocus
+          />
+        </SheetAmount>
+        <QuickSteps steps={STEPS} format={formatEuroSigned} onStep={adjust} />
+        <SheetBlock title="Après modification">
+          {category ? (
+            <FormCard>
+              <ValueRow label="Dépensé ce mois" value={formatEuroShort(spent)} />
+              <ValueRow
+                label="Il restera"
+                value={formatEuroShort(remainingAfter)}
+                tone={remainingAfter >= 0 ? 'success' : 'danger'}
+              />
+              <ValueRow
+                label="Budget réparti"
+                value={`${formatEuroShort(allocatedAfter)} / ${formatEuroShort(budgetAfter)}`}
+                tone={overAllocated > 0 ? 'danger' : undefined}
+              />
+            </FormCard>
+          ) : (
+            <FormCard>
+              <ValueRow label="Dépenses fixes" value={formatEuroShort(breakdown.fixed)} />
+              <ValueRow label="Objectif d’épargne" value={formatEuroShort(breakdown.savings)} />
+              <ValueRow label="Catégories" value={formatEuroShort(breakdown.categories)} />
+              <ValueRow
+                label={toAllocate >= 0 ? 'Reste à répartir' : 'Dépassement'}
+                value={formatEuroShort(Math.abs(toAllocate))}
+                tone={toAllocate >= 0 ? 'success' : 'danger'}
+              />
+            </FormCard>
+          )}
+        </SheetBlock>
+      </Dialog>
+    )
   }
 
   return (

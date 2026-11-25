@@ -1,0 +1,80 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--layout-pro-round);
+  padding: 0 var(--layout-screen-margin);
+}
+
+.avatar {
+  display: flex;
+  border-radius: var(--radius-full);
+  touch-action: manipulation;
+}
+
+.pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+  min-width: 0;
+  height: var(--layout-pro-round);
+  padding: 0 var(--space-16);
+  border-radius: var(--radius-full);
+  background: var(--bg-icon-button);
+  color: var(--text-primary);
+}
+
+.pillText {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The native select covers the pill: the iOS wheel opens on tap. */
+.select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  font-size: var(--font-size-body);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.round {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  margin: calc((var(--layout-pro-round) - var(--layout-control)) / 2);
+  border-radius: var(--radius-full);
+  background: var(--bg-icon-button);
+  background-clip: content-box;
+  padding: calc((var(--layout-control) - var(--layout-pro-round)) / 2);
+  color: var(--icon-primary);
+  touch-action: manipulation;
+}
+
+.round:active {
+  opacity: var(--pressed-opacity);
+}
+
+.round[aria-pressed='true'] {
+  background-color: var(--bg-accent);
+  color: var(--icon-on-accent);
+}
+
+.spacer {
+  width: var(--layout-pro-round);
+  height: var(--layout-pro-round);
+}

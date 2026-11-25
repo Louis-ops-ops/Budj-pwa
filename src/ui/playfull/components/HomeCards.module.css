@@ -1,0 +1,88 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  padding: var(--space-16) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--card-fg);
+  text-align: left;
+  touch-action: manipulation;
+}
+
+button.card:active {
+  opacity: var(--pressed-opacity);
+}
+
+.savings {
+  gap: var(--space-4);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.danger {
+  color: var(--text-danger);
+}
+
+.spread {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  color: var(--text-brand-faint);
+}
+
+.dashed {
+  gap: var(--space-4);
+  border: var(--layout-border-strong) dashed var(--border-brand-subtle);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.centered {
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-24) var(--space-16);
+  text-align: center;
+}
+
+.create {
+  margin-top: var(--space-8);
+  min-height: var(--layout-control);
+  padding: 0 var(--space-16);
+  border-radius: var(--radius-full);
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+  touch-action: manipulation;
+}
+
+.create:active {
+  opacity: var(--pressed-opacity);
+}

@@ -1,0 +1,28 @@
+.row {
+  display: flex;
+  gap: var(--space-8);
+  width: 100%;
+}
+
+.pill {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: var(--layout-control);
+  padding: var(--space-10) var(--space-16);
+  border: var(--layout-border) solid var(--border-brand-subtle);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--text-brand);
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.pill:active {
+  opacity: var(--pressed-opacity);
+}
+
+.pill[aria-pressed='true'] {
+  border-color: var(--bg-accent);
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}

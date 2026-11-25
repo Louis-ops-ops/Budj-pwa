@@ -1,5 +1,6 @@
 .host {
   position: fixed;
+  z-index: var(--z-toast);
   right: var(--space-32);
   bottom: var(--space-32);
   display: flex;

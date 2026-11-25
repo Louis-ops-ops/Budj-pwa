@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { IconName } from '../components/Icon'
-import type { Expense, FixedExpense } from '../shared/types'
+import type { BudjData, Expense, FixedExpense } from '../shared/types'
 import { monthOf, todayISO } from '../data/dates'
 import { motionMs } from './motion'
 
@@ -27,6 +27,25 @@ export type DialogRequest =
       onConfirm: () => void
     }
   | { kind: 'settings' }
+  | { kind: 'more' }
+  | { kind: 'savingsGoal' }
+  | { kind: 'sortUncategorized' }
+  | { kind: 'monthStart' }
+  | { kind: 'rollover' }
+  | { kind: 'identity' }
+  | {
+      kind: 'choice'
+      title: string
+      options: { value: string; label: string; hint?: string }[]
+      value: string
+      onSelect: (value: string) => void
+      note?: string
+    }
+  | { kind: 'export' }
+  | { kind: 'importPreview'; data: BudjData }
+  | { kind: 'reset' }
+  | { kind: 'reminderTime' }
+  | { kind: 'deleteCategory'; categoryId: string; onDeleted?: () => void }
   | { kind: 'actions'; title: string; actions: RowAction[] }
 
 /** `closing`: playing its exit animation, removed right after. */
@@ -42,6 +61,9 @@ interface UiState {
   toasts: Toast[]
   /** Month shown on screens with a month picker. */
   month: string
+  /** The tab bar gives way to a bottom panel (selection mode, v3 §7.5). */
+  chromeHidden: boolean
+  setChromeHidden(hidden: boolean): void
   openDialog(request: DialogRequest): void
   closeDialog(id: number): void
   toast(message: string): void
@@ -55,6 +77,11 @@ export const useUi = create<UiState>()((set, get) => ({
   dialogs: [],
   toasts: [],
   month: monthOf(todayISO()),
+  chromeHidden: false,
+
+  setChromeHidden(chromeHidden) {
+    if (get().chromeHidden !== chromeHidden) set({ chromeHidden })
+  },
 
   openDialog(request) {
     set({ dialogs: [...get().dialogs, { ...request, id: nextId++ } as DialogEntry] })

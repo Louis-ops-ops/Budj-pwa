@@ -1,0 +1,207 @@
+/* Mobile bottom sheet parts (Figma 04 · Ajouter une dépense, both styles). */
+.amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+  padding-top: var(--space-8);
+}
+
+.hint {
+  text-align: center;
+}
+
+/* Pro/Note */
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 100%;
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.note[data-tone='success'] {
+  background: var(--feedback-success-bg);
+  color: var(--feedback-success-fg);
+}
+
+.note[data-tone='danger'] {
+  background: var(--feedback-danger-bg);
+  color: var(--feedback-danger-fg);
+}
+
+.note[data-tone='paint'] {
+  background: var(--note-bg);
+  color: var(--note-fg);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.blockHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+/* Chips on one line, scrolled sideways up to the sheet edges. */
+.chips {
+  display: flex;
+  gap: var(--space-8);
+  margin: 0 calc(-1 * var(--layout-screen-margin));
+  padding: 0 var(--layout-screen-margin);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-padding: 0 var(--layout-screen-margin);
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chips > * {
+  flex-shrink: 0;
+}
+
+/* Formulaire: grouped rows in a bg/surface card */
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  overflow: hidden;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--layout-row-form);
+  padding: var(--space-16);
+  color: var(--text-primary);
+  touch-action: manipulation;
+}
+
+/* Pro/Séparateur: inset 16 on the left */
+.row + .row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--space-16);
+  height: var(--layout-border);
+  background: var(--border-subtle);
+}
+
+[data-ui='pro'] .row + .row::before {
+  background: var(--border-glass);
+}
+
+.label {
+  flex: 1 0 auto;
+  color: var(--text-secondary);
+}
+
+.value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  /* ≥ 16 px: iOS does not zoom on focus */
+  font-size: var(--font-size-body);
+  text-align: right;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-regular);
+}
+
+.row:focus-within {
+  background: var(--bg-icon-button);
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--icon-muted);
+}
+
+/* Native date / select over the whole row */
+.overlayInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+  /* ≥ 16 px: iOS does not zoom on focus */
+  font-size: var(--font-size-body);
+}
+
+/* −50 / −10 / +10 / +50, suggestions */
+.steps {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.step {
+  flex: 1;
+  min-height: var(--layout-pro-round);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  touch-action: manipulation;
+}
+
+.step:active {
+  background: var(--bg-brand-muted);
+}
+
+.step[aria-checked='true'] {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}
+
+.callout {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-md);
+}
+
+.callout[data-tone='danger'] {
+  background: var(--feedback-danger-bg);
+  color: var(--feedback-danger-fg);
+}
+
+.callout[data-tone='brand'] {
+  background: var(--bg-brand-muted);
+  color: var(--text-primary);
+}
+
+.calloutIcon {
+  flex-shrink: 0;
+}

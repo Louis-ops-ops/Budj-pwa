@@ -200,6 +200,20 @@
 }
 
 @media (max-width: 1023px) {
+  /* v3 §7.5: bottom panel in place of the tab bar */
+  .selectionBar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    margin: 0;
+    padding: var(--space-16) var(--layout-screen-margin) max(var(--safe-bottom), var(--space-16));
+    border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
+    background: var(--bg-sheet);
+    box-shadow: var(--shadow-elevated);
+  }
+
   .table {
     padding: var(--space-6) var(--space-12);
     border: none;

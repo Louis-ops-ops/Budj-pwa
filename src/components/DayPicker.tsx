@@ -13,8 +13,13 @@ export function DayPicker({
 }): React.JSX.Element {
   const selectedRef = useRef<HTMLButtonElement>(null)
 
+  // Centers the chosen day by scrolling the row only (scrollIntoView would
+  // also move the sheet and the page behind it).
   useEffect(() => {
-    selectedRef.current?.scrollIntoView({ inline: 'center', block: 'nearest' })
+    const day = selectedRef.current
+    const row = day?.parentElement
+    if (!day || !row) return
+    row.scrollLeft = day.offsetLeft - (row.clientWidth - day.offsetWidth) / 2
   }, [])
 
   return (

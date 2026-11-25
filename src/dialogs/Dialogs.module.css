@@ -243,26 +243,6 @@
   gap: var(--space-12);
 }
 
-.amountBlock {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  padding: var(--space-8) 0;
-}
-
-.impactSentence {
-  text-align: center;
-}
-
-.annualCost {
-  text-align: center;
-  color: var(--text-secondary);
-}
-
-.annualCost strong {
-  color: var(--text-brand);
-}
-
 .groupLabelMuted {
   color: var(--text-secondary);
 }
@@ -306,47 +286,92 @@
   color: var(--preview-fg);
 }
 
-.lineCard {
+/* Nouvelles dépenses: one card per expense (Figma 399:3459) */
+.expenseCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-12);
-  padding: var(--space-12);
-  border-radius: var(--radius-md);
+  gap: var(--space-8);
+  padding: var(--space-16) 0;
+  border-radius: var(--radius-lg);
   background: var(--bg-surface);
+  overflow: hidden;
 }
 
-.lineCard [role='group'] {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.lineCard [role='group'] > * {
-  flex-shrink: 0;
-}
-
-.lineCardAmount {
+.expenseCardHead {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--layout-chip);
+  padding: 0 var(--space-16);
 }
 
-.lineCardInput {
+.expenseCardDelete {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.expenseCardDelete > span {
+  border-color: transparent;
+  background: var(--bg-danger-subtle);
+}
+
+.expenseCardAmount {
   display: flex;
   align-items: baseline;
   gap: var(--space-4);
+  padding: 0 var(--space-16);
+  cursor: text;
 }
 
-.lineCardField {
-  width: var(--layout-col-money);
+.expenseCardSizer {
+  display: inline-grid;
+  min-width: 0;
+}
+
+.expenseCardSizer > * {
+  grid-area: 1 / 1;
+  font-weight: var(--font-weight-bold);
+  white-space: pre;
+}
+
+.expenseCardSizer > span {
+  visibility: hidden;
+}
+
+.expenseCardInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
   border: none;
   background: transparent;
-}
-
-.lineCardField:focus-visible {
+  color: var(--text-primary);
+  font-family: inherit;
+  font-weight: var(--font-weight-bold);
   outline: none;
 }
+
+.expenseCardInput::placeholder {
+  color: var(--text-secondary);
+}
+
+/* The card's own margins: no separate form card around the row. */
+.expenseCardRows > * {
+  min-height: var(--layout-row-form);
+}
+
+/* Chips of a card scroll up to its edges. */
+.expenseCard [role='group'] {
+  margin: 0;
+  padding: 0 var(--space-16);
+}
+
+.totalRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 var(--space-4);
+}
+
 
 @media (max-width: 1023px) {
   .groupLabel {
@@ -360,4 +385,87 @@
     min-width: 0;
     padding: var(--space-8) var(--space-4);
   }
+}
+
+/* v3: centered text link at the bottom of a sheet (Fermer, Passer…) */
+.centerLink {
+  display: flex;
+  justify-content: center;
+}
+
+/* v3: À catégoriser, the expense being sorted (Figma 429:6261) */
+.sortCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-24) var(--space-16);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  text-align: center;
+}
+
+.sortAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-sort-avatar);
+  height: var(--layout-sort-avatar);
+  border: var(--layout-border-strong) dashed var(--border-brand-subtle);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--text-brand);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+}
+
+.timeInput {
+  min-height: var(--layout-control);
+  padding: var(--space-8) var(--space-16);
+  border: var(--layout-border) solid var(--border-brand-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--font-size-body);
+}
+
+/* « Budget actuel : 1 900 € » + gap pill (Figma 03 · Budget mensuel) */
+.currentLine {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+/* Item about to be deleted or imported, in a bg/surface card */
+.previewCard {
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  overflow: hidden;
+}
+
+/* « 1 sur 3 » and one dot per expense (Figma 429:6261) */
+.sortProgress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sortDots {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.sortDot {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+}
+
+.sortDot[data-current] {
+  width: var(--space-16);
+  background: var(--bg-accent);
 }

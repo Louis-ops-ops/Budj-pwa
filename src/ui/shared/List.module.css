@@ -1,0 +1,180 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-4) 0;
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+  overflow: hidden;
+}
+
+.group[data-surface='sheet'] {
+  background: var(--bg-sheet);
+}
+
+/* In sheets (Formulaire): bg/surface, radius lg */
+.group[data-surface='surface'] {
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+
+.separator {
+  height: var(--layout-border);
+  margin-left: var(--space-16);
+  background: var(--bg-brand-strong);
+}
+
+[data-ui='pro'] .separator {
+  background: var(--border-glass);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--layout-row-list);
+  padding: var(--space-12) var(--space-16);
+  text-align: left;
+  color: var(--text-primary);
+  touch-action: manipulation;
+}
+
+button.row:active {
+  background: var(--bg-icon-button);
+}
+
+.row[data-selected='true'] {
+  background: var(--bg-brand-muted);
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--layout-row-form);
+  padding: var(--space-16);
+}
+
+.group:has(.formRow) {
+  padding: 0;
+}
+
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--layout-row-circle);
+  height: var(--layout-row-circle);
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-muted);
+  color: var(--icon-primary);
+}
+
+.circle[data-tone='danger'] {
+  color: var(--icon-danger);
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.actionLabel {
+  color: var(--text-brand);
+}
+
+.row[data-tone='danger'] .actionLabel,
+.row[data-tone='danger'] .menuLabel {
+  color: var(--text-danger);
+}
+
+.menuLabel {
+  color: var(--text-primary);
+}
+
+.chevron {
+  color: var(--icon-muted);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trailing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Pro/Interrupteur */
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--layout-switch-width);
+  height: var(--layout-switch-height);
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-strong);
+  transition: background var(--motion-fast);
+}
+
+.switch[data-on='true'] {
+  background: var(--bg-accent);
+}
+
+.knob {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  width: var(--layout-switch-knob);
+  height: var(--layout-switch-knob);
+  border-radius: var(--radius-full);
+  background: var(--text-on-accent);
+  transition: transform var(--motion-fast) var(--ease-smooth);
+}
+
+.switch[data-on='true'] .knob {
+  transform: translateX(var(--layout-switch-travel));
+}
+
+label.row {
+  position: relative;
+}
+
+/* Native select over the whole row */
+.overlaySelect {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: var(--font-size-body);
+}

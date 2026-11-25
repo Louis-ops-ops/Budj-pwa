@@ -1,0 +1,33 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+  padding: var(--space-16);
+  border: var(--layout-border) solid var(--border-brand-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-brand-subtle);
+  text-align: left;
+  touch-action: manipulation;
+}
+
+.card:active {
+  opacity: var(--pressed-opacity);
+}
+
+.figure {
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.spread {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}

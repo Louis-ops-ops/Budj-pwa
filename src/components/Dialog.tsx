@@ -41,6 +41,8 @@ interface DialogProps {
   submitDisabled?: boolean
   submitVariant?: 'primary' | 'danger'
   cancelLabel?: string
+  /** Mobile: shows the cancel button under the primary one (confirmations). */
+  cancelVisible?: boolean
   /** Left side of the footer (text link). */
   footerStart?: ReactNode
   /** Right side of the header, before the close button. */
@@ -58,6 +60,7 @@ export function Dialog({
   submitDisabled,
   submitVariant = 'primary',
   cancelLabel = 'Annuler',
+  cancelVisible,
   footerStart,
   headerExtra,
   size = 'regular',
@@ -180,6 +183,7 @@ export function Dialog({
         aria-modal="true"
         aria-labelledby={titleId}
         className={[styles.dialog, size === 'small' ? styles.small : ''].join(' ')}
+        data-cancel={cancelVisible || undefined}
         onSubmit={submit}
         noValidate
         style={dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined}
@@ -195,7 +199,7 @@ export function Dialog({
           <span className={styles.handle} />
         </div>
         <div className={styles.header}>
-          <Text variant="h1" as="h2" id={titleId}>
+          <Text variant="h1" as="h2" id={titleId} className={styles.title}>
             {title}
           </Text>
           <div className={styles.headerSide}>
@@ -261,6 +265,7 @@ export function ConfirmDialog({
       }}
       submitLabel={confirmLabel}
       submitVariant={danger ? 'danger' : 'primary'}
+      cancelVisible
       size="small"
     >
       <Text variant="body-regular" color="tertiary">

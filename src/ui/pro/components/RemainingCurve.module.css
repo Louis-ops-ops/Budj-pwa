@@ -1,0 +1,50 @@
+.curve {
+  position: relative;
+  height: var(--layout-pro-curve);
+  margin: 0;
+}
+
+.curve svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ideal {
+  stroke: var(--text-brand-deep);
+  stroke-width: var(--layout-border-strong);
+  stroke-dasharray: 4 4;
+  opacity: var(--ideal-opacity);
+}
+
+.real {
+  fill: none;
+  stroke: var(--text-primary);
+  stroke-width: var(--layout-gauge-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.today {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  transform: translate(-50%, -50%);
+}
+
+.dot {
+  width: var(--layout-pro-dot);
+  height: var(--layout-pro-dot);
+  border: var(--layout-border-strong) solid var(--bg-brand-strong);
+  border-radius: var(--radius-full);
+  background: var(--text-primary);
+}
+
+.label {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  color: var(--text-brand-deep);
+}

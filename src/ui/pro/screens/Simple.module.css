@@ -1,0 +1,143 @@
+.padded {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16) var(--space-16);
+}
+
+.padded > :first-child {
+  align-self: stretch;
+}
+
+.spread {
+  display: flex;
+  justify-content: space-between;
+  align-self: stretch;
+  gap: var(--space-12);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6) var(--space-12);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.legendDot {
+  width: var(--layout-dot);
+  height: var(--layout-dot);
+  border-radius: var(--radius-full);
+}
+
+.editRow {
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-8);
+}
+
+.editRow > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  color: var(--icon-danger);
+  touch-action: manipulation;
+}
+
+.reorder {
+  display: flex;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--text-primary);
+  touch-action: manipulation;
+}
+
+.deep {
+  color: var(--text-brand-deep);
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.totalFigure {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Mini chart of the Profile: bars + dashed goal line on the same scale */
+.mini {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+  gap: var(--space-8);
+  height: var(--layout-mini-chart);
+  padding-bottom: var(--space-16);
+}
+
+.goalLine {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-top: var(--layout-border-strong) dashed var(--text-success);
+}
+
+.miniCol {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  height: 100%;
+  color: var(--text-secondary);
+}
+
+.miniCol > :last-child {
+  position: absolute;
+  bottom: calc(-1 * var(--space-16));
+}
+
+.miniBar {
+  width: 100%;
+  min-height: var(--layout-chart-bar-min);
+  border-radius: var(--radius-xs);
+  background: var(--text-brand);
+}
+
+.miniBar[data-state='reached'] {
+  background: var(--text-success);
+}
+
+.miniBar[data-state='upcoming'] {
+  background: var(--bg-surface);
+}
+
+.miniCol[data-upcoming] > :last-child {
+  opacity: var(--disabled-opacity);
+}
+
+.miniBar[data-state='missed'] {
+  background: var(--icon-danger);
+}

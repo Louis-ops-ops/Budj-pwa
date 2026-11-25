@@ -32,6 +32,36 @@ export function monthRange(from: string, to: string): string[] {
   return out
 }
 
+/**
+ * Budget month a day belongs to when the month starts on `startDay` (1–28).
+ * With 5: from the 5th to the 4th of the next month, named after the first one.
+ */
+export function budgetMonthOf(day: string, startDay = 1): string {
+  return dayNumber(day) >= startDay ? monthOf(day) : addMonths(monthOf(day), -1)
+}
+
+/** First and last day of a budget month. */
+export function periodBounds(month: string, startDay = 1): { first: string; last: string } {
+  const first = makeDay(month, startDay)
+  if (startDay === 1) return { first, last: makeDay(month, daysInMonth(month)) }
+  return { first, last: makeDay(addMonths(month, 1), startDay - 1) }
+}
+
+/**
+ * Date a fixed expense charged on `dayOfMonth` falls on within a budget month.
+ * Days before the start day belong to the next calendar month; 31 → last day of shorter months.
+ */
+export function chargeDateIn(month: string, dayOfMonth: number, startDay = 1): string {
+  const calendar = dayOfMonth >= startDay ? month : addMonths(month, 1)
+  return makeDay(calendar, Math.min(dayOfMonth, daysInMonth(calendar)))
+}
+
+/** Adds n days to a day. */
+export function addDays(day: string, n: number): string {
+  const d = new Date(Date.UTC(+day.slice(0, 4), +day.slice(5, 7) - 1, +day.slice(8, 10) + n))
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`
+}
+
 /** Day difference b − a. */
 export function daysBetween(a: string, b: string): number {
   const toUtc = (d: string): number => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10))

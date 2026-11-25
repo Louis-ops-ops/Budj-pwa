@@ -6,6 +6,7 @@ import { addMonths, formatLongDay, formatMonthName } from '../data/dates'
 import { initialOf, PAYMENT_LABELS } from '../data/format'
 import { formatEuro } from '../data/money'
 import * as sel from '../data/selectors'
+import { todayISO } from '../data/dates'
 import { useBudj } from '../data/store'
 import { useUi } from '../ui/uiStore'
 import { Avatar } from '../components/Avatar'
@@ -144,14 +145,19 @@ export function HistoryMobile({
         <button
           type="button"
           className={styles.banner}
-          onClick={() => setFilter(activeFilter === 'none' ? null : 'none')}
+          onClick={() =>
+            // v3 §7.7: the banner opens the sorting sheet (current month only).
+            month === sel.currentMonth(data, todayISO())
+              ? openDialog({ kind: 'sortUncategorized' })
+              : setFilter(activeFilter === 'none' ? null : 'none')
+          }
         >
           <Icon name="move" size={20} />
           <Text variant="body-medium" as="span" className={styles.bannerText}>
             {uncategorized} {uncategorized > 1 ? 'dépenses' : 'dépense'} à catégoriser
           </Text>
           <Text variant="body-medium" color="brand" as="span">
-            {activeFilter === 'none' ? 'Tout voir' : 'Ranger'}
+            Ranger
           </Text>
           <Icon name="chevron" size={16} />
         </button>

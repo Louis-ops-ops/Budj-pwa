@@ -153,21 +153,26 @@ interface SelectFieldProps<T extends string> {
   value: T
   options: { value: T; label: string }[]
   onChange(value: T): void
+  disabled?: boolean
+  hint?: string
 }
 
 export function SelectField<T extends string>({
   label,
   value,
   options,
-  onChange
+  onChange,
+  disabled,
+  hint
 }: SelectFieldProps<T>): React.JSX.Element {
   const id = useId()
   return (
-    <FieldShell label={label} htmlFor={id}>
+    <FieldShell label={label} htmlFor={id} hint={hint}>
       <select
         id={id}
         className={[styles.input, styles.select].join(' ')}
         value={value}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.value as T)}
       >
         {options.map((o) => (
