@@ -4,6 +4,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import { syncTheme } from './platform/theme'
+// Starts recording the window height at launch (diagnostic in the Settings).
+import './platform/viewport'
 
 syncTheme()
 

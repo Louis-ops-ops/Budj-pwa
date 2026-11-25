@@ -1,5 +1,6 @@
 import type { ThemeSetting, UiStyle } from '../shared/types'
 import { platform } from './storage'
+import { isStandalone } from './install'
 
 // Read by public/theme-init.js before the first paint.
 const THEME_MIRROR = 'budj-theme'
@@ -31,6 +32,11 @@ function writeMirror(key: string, value: string): void {
 let statusSource: { element: Element; token: string } | null = null
 
 function updateThemeColor(): void {
+  // Installed app: the status bar is translucent (index.html), the page shows
+  // through it. A theme-color changed at run time there can make iOS 26 lay
+  // the web view out as if the status bar were opaque: 48 pt short, with a
+  // black band at the bottom. The static metas of index.html stay.
+  if (isStandalone()) return
   const color = statusSource
     ? getComputedStyle(statusSource.element).getPropertyValue(statusSource.token).trim()
     : getComputedStyle(document.documentElement).getPropertyValue('--bg-app').trim()
