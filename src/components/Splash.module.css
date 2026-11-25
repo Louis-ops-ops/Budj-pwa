@@ -88,3 +88,8 @@
     transform: scale(1.04);
   }
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+:global(:root[data-standalone]) .splash {
+  position: absolute;
+}

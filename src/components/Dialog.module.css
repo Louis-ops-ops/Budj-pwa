@@ -239,3 +239,11 @@
     width: 100%;
   }
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+:global(:root[data-standalone]) .overlay {
+  position: absolute;
+  /* The sheet slides in from below: clipped here, else it makes the page
+     taller and focusing a field scrolls the whole page. */
+  overflow: clip;
+}

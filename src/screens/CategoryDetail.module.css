@@ -263,3 +263,10 @@
     flex: 1;
   }
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+@media (max-width: 1023px) {
+  :global(:root[data-standalone]) .selectionBar {
+    position: absolute;
+  }
+}
