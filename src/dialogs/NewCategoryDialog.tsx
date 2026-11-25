@@ -5,7 +5,7 @@ import * as sel from '../data/selectors'
 import { isCategoryNameTaken } from '../data/mutations'
 import { amountTextToCents, formatEuro, formatEuroShort, sanitizeAmountText } from '../data/money'
 import { firstFreeColor } from '../data/format'
-import { monthOf, todayISO } from '../data/dates'
+import { todayISO } from '../data/dates'
 import { Dialog } from '../components/Dialog'
 import { CategoryRow } from '../components/CategoryRow'
 import { ColorSwatchPicker, type ColorChoice } from '../components/ColorSwatchPicker'
@@ -14,6 +14,9 @@ import { TextField } from '../components/Field'
 import { Gauge } from '../components/Gauge'
 import { Text } from '../components/Text'
 import { useIsMobile } from '../ui/useIsMobile'
+import { Avatar } from '../components/Avatar'
+import { Row } from '../ui/shared/List'
+import { FormCard, SheetBlock, TextRow } from '../ui/shared/SheetParts'
 import styles from './Dialogs.module.css'
 
 interface NewCategoryDialogProps {
@@ -30,7 +33,7 @@ export function NewCategoryDialog({
   const addCategory = useBudj((s) => s.addCategory)
   const toast = useUi((s) => s.toast)
 
-  const month = monthOf(todayISO())
+  const month = sel.currentMonth(data, todayISO())
   const [name, setName] = useState('')
   const [budget, setBudget] = useState('')
   const [color, setColor] = useState<ColorChoice>(() => ({
@@ -52,13 +55,87 @@ export function NewCategoryDialog({
     onCreated?.(category.id)
   }
 
+  const restText =
+    rest > 0
+      ? `Il reste ${formatEuro(rest)} à répartir`
+      : rest === 0
+        ? 'Tout ton budget est réparti avec cette catégorie'
+        : `Tu répartis ${formatEuro(-rest)} de plus que ton budget mensuel`
+
+  if (isMobile) {
+    const paint = categoryPaint(color)
+    return (
+      <Dialog
+        title="Nouvelle catégorie"
+        onClose={onClose}
+        onSubmit={submit}
+        submitLabel="Créer la catégorie"
+        submitDisabled={!trimmed || taken}
+      >
+        <SheetBlock title="Aperçu">
+          <div className={styles.previewCard}>
+            <Row
+              leading={<Avatar color={paint} initial={trimmed || 'N'} />}
+              title={trimmed || 'Nouvelle catégorie'}
+              subtitle={`${formatEuroShort(0)} dépensé`}
+              trailing={formatEuroShort(cents)}
+              trailingSub={`sur ${formatEuroShort(cents)}`}
+            />
+          </div>
+        </SheetBlock>
+        <FormCard>
+          <TextRow
+            label="Nom"
+            value={name}
+            onChange={setName}
+            placeholder="Ex : Vacances"
+            maxLength={30}
+          />
+          <TextRow
+            label="Budget mensuel"
+            value={budget}
+            onChange={(v) => setBudget(sanitizeAmountText(v))}
+            placeholder="0"
+            inputMode="decimal"
+            suffix="€"
+          />
+        </FormCard>
+        {taken && (
+          <Text variant="label-regular" color="danger">
+            Une catégorie porte déjà ce nom.
+          </Text>
+        )}
+        <SheetBlock title="Couleur">
+          <ColorSwatchPicker value={color} onChange={setColor} />
+        </SheetBlock>
+        <div className={styles.allocation}>
+          <div className={styles.allocationHead}>
+            <Text variant="label-medium" color="secondary" as="span">
+              Budget réparti
+            </Text>
+            <Text variant="label-medium" as="span" tabular>
+              {formatEuroShort(allocated)} / {formatEuroShort(monthBudget)}
+            </Text>
+          </div>
+          <Gauge
+            ratio={monthBudget > 0 ? allocated / monthBudget : 1}
+            fill={rest < 0 ? 'bg-danger' : 'bg-accent'}
+            track="bg-surface"
+          />
+          <Text variant="label-regular" color={rest < 0 ? 'danger' : 'secondary'}>
+            {restText}
+          </Text>
+        </div>
+      </Dialog>
+    )
+  }
+
   return (
     <Dialog
       title="Nouvelle catégorie"
       onClose={onClose}
       onSubmit={submit}
       submitLabel="Créer la catégorie"
-      submitIcon={isMobile ? 'add' : undefined}
       submitDisabled={!trimmed || taken}
     >
       <div className={styles.group}>

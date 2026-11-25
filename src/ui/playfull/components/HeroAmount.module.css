@@ -1,0 +1,22 @@
+.amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: var(--text-brand);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.amount[data-danger='true'] {
+  color: var(--text-danger);
+}
+
+.figure {
+  font-size: min(var(--font-size-hero), var(--hero-fluid));
+  line-height: 1;
+}
+
+.unit {
+  font-size: min(var(--font-size-hero-unit), var(--hero-unit-fluid));
+  line-height: 1;
+}

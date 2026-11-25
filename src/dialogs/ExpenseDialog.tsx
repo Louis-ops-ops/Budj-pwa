@@ -14,7 +14,18 @@ import { addMonths, monthOf, todayISO } from '../data/dates'
 import { Dialog } from '../components/Dialog'
 import { AmountInput } from '../components/AmountInput'
 import { AddChip, CategoryChip, ChipList } from '../components/Chip'
-import { DateChip, DateField, SelectField, TextField } from '../components/Field'
+import { DateField, SelectField, TextField } from '../components/Field'
+import {
+  AmountHint,
+  ChipRow,
+  DateRow,
+  FormCard,
+  Note,
+  SelectRow,
+  SheetAmount,
+  SheetBlock,
+  TextRow
+} from '../ui/shared/SheetParts'
 import { IconButton } from '../components/IconButton'
 import { Text } from '../components/Text'
 import { TextLink } from '../components/TextLink'
@@ -107,6 +118,10 @@ export function ExpenseDialog({
     onClose()
   }
 
+  const paymentOptions = (Object.keys(PAYMENT_LABELS) as (PaymentMethod | 'none')[]).map(
+    (value) => ({ value, label: PAYMENT_LABELS[value] })
+  )
+
   const details = (
     <div className={styles.row}>
       {!multiple && (
@@ -130,17 +145,15 @@ export function ExpenseDialog({
           label="Paiement"
           value={payment}
           onChange={setPayment}
-          options={(Object.keys(PAYMENT_LABELS) as (PaymentMethod | 'none')[]).map((value) => ({
-            value,
-            label: PAYMENT_LABELS[value]
-          }))}
+          options={paymentOptions}
         />
       </div>
     </div>
   )
 
+  const ChipsWrap = isMobile ? ChipRow : ChipList
   const chips = (line: Line): React.JSX.Element => (
-    <ChipList label="Catégorie">
+    <ChipsWrap label="Catégorie">
       {data.categories.map((c) => (
         <CategoryChip
           key={c.id}
@@ -159,7 +172,7 @@ export function ExpenseDialog({
           })
         }
       />
-    </ChipList>
+    </ChipsWrap>
   )
 
   if (multiple && isMobile) {
@@ -170,74 +183,72 @@ export function ExpenseDialog({
         onClose={onClose}
         onSubmit={submit}
         submitLabel={`Ajouter les ${lines.length} dépenses`}
-        submitIcon="add"
         submitDisabled={!valid}
-        headerExtra={
-          <DateChip
-            value={date}
-            display={formatExpenseDate(date, today)}
-            onChange={setDate}
-            max={`${addMonths(monthOf(today), 12)}-01`}
-          />
-        }
-        footerStart={
+      >
+        {lines.map((line, i) => (
+          <div
+            key={line.key}
+            className={styles.expenseCard}
+            role="group"
+            aria-label={`Dépense ${i + 1}`}
+          >
+            <div className={styles.expenseCardHead}>
+              <Text variant="label-medium" color="secondary" as="span">
+                Dépense {i + 1}
+              </Text>
+              {i > 0 && (
+                <IconButton
+                  icon="delete"
+                  tone="danger"
+                  label={`Retirer la dépense ${i + 1}`}
+                  className={styles.expenseCardDelete}
+                  onClick={() => setLines((all) => all.filter((l) => l.key !== line.key))}
+                />
+              )}
+            </div>
+            <label className={styles.expenseCardAmount}>
+              {/* The hidden copy gives the input the width of its text. */}
+              <span className={styles.expenseCardSizer}>
+                <span className="t-display-m tabular" aria-hidden="true">
+                  {line.amount || '0'}
+                </span>
+                <input
+                  className={`t-display-m tabular ${styles.expenseCardInput}`}
+                  value={line.amount}
+                  placeholder="0"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  aria-label={`Montant de la dépense ${i + 1}, en euros`}
+                  autoFocus={i === lines.length - 1 && i > 0}
+                  onChange={(e) => update(line.key, { amount: sanitizeAmountText(e.target.value) })}
+                />
+              </span>
+              <Text variant="h2" color="secondary" as="span" aria-hidden="true">
+                €
+              </Text>
+            </label>
+            <div className={styles.expenseCardRows}>
+              <TextRow
+                label="Libellé"
+                value={line.label}
+                onChange={(label) => update(line.key, { label })}
+                placeholder={categoryOf(line.categoryId)?.name ?? 'Ex : Carrefour…'}
+                maxLength={60}
+              />
+            </div>
+            {chips(line)}
+          </div>
+        ))}
+        <div className={styles.centerLink}>
           <TextLink
             label="Ajouter une autre dépense"
             icon="add"
             onClick={addLine}
             disabled={full}
           />
-        }
-      >
-        {lines.map((line, i) => (
-          <div
-            key={line.key}
-            className={styles.lineCard}
-            role="group"
-            aria-label={`Dépense ${i + 1}`}
-          >
-            <div className={styles.previewLine}>
-              <div className={styles.lineCardAmount}>
-                <Text variant="label-regular" color="tertiary" as="span">
-                  Dépense {i + 1}
-                </Text>
-                <span className={styles.lineCardInput}>
-                  <input
-                    className={`t-h1 tabular ${styles.lineCardField}`}
-                    value={line.amount}
-                    placeholder="0"
-                    inputMode="decimal"
-                    aria-label={`Montant de la dépense ${i + 1}`}
-                    autoFocus={i === lines.length - 1 && i > 0}
-                    onChange={(e) =>
-                      update(line.key, { amount: sanitizeAmountText(e.target.value) })
-                    }
-                  />
-                  <Text variant="body-regular" color="tertiary" as="span">
-                    €
-                  </Text>
-                </span>
-              </div>
-              {i > 0 && (
-                <IconButton
-                  icon="delete"
-                  label={`Retirer la dépense ${i + 1}`}
-                  onClick={() => setLines((all) => all.filter((l) => l.key !== line.key))}
-                />
-              )}
-            </div>
-            <TextField
-              label="Libellé"
-              value={line.label}
-              onChange={(label) => update(line.key, { label })}
-              placeholder={categoryOf(line.categoryId)?.name ?? 'Ex. Carrefour'}
-              maxLength={60}
-            />
-            {chips(line)}
-          </div>
-        ))}
-        <div className={styles.previewLine}>
-          <Text variant="body-regular" color="tertiary" as="span">
+        </div>
+        <div className={styles.totalRow}>
+          <Text variant="body-regular" color="secondary" as="span">
             Total
           </Text>
           <Text variant="h3" as="span" tabular>
@@ -368,56 +379,51 @@ export function ExpenseDialog({
         onClose={onClose}
         onSubmit={submit}
         submitLabel={expense ? 'Enregistrer' : 'Ajouter la dépense'}
-        submitIcon={expense ? undefined : 'add'}
         submitDisabled={!valid}
-        headerExtra={
-          <DateChip
-            value={date}
-            display={formatExpenseDate(date, today)}
-            onChange={setDate}
-            max={`${addMonths(monthOf(today), 12)}-01`}
-          />
-        }
-        footerStart={
-          !expense && <TextLink label="Ajouter une autre dépense" icon="add" onClick={addLine} />
-        }
+        footerStart={!expense && <TextLink label="Ajouter une autre dépense" onClick={addLine} />}
       >
-        <div className={styles.amountBlock}>
+        <SheetAmount
+          below={
+            impact && category ? (
+              <Note live tone="danger" paint={impact.over ? undefined : categoryPaint(category)}>
+                {impact.over ? 'Dépassement de ' : 'Il restera '}
+                {formatEuro(Math.abs(impact.remainingAfter))} sur {category.name}
+              </Note>
+            ) : (
+              !category && <AmountHint>Saisis le montant de ta dépense</AmountHint>
+            )
+          }
+        >
           <AmountInput
             value={line.amount}
             onChange={(amount) => update(line.key, { amount })}
             label="Montant"
             autoFocus
           />
-          {impact && category && (
-            <Text
-              variant="label-regular"
-              color={impact.over ? 'danger' : 'secondary'}
-              className={styles.impactSentence}
-              aria-live="polite"
-            >
-              {impact.over ? 'Dépassement de ' : 'Il restera '}
-              <strong style={impact.over ? undefined : { color: categoryPaint(category).fg }}>
-                {formatEuro(Math.abs(impact.remainingAfter))}
-              </strong>
-              {' sur '}
-              {category.name}
-            </Text>
-          )}
-        </div>
-        <TextField
-          label="Libellé"
-          value={line.label}
-          onChange={(label) => update(line.key, { label })}
-          placeholder={category?.name ?? 'Ex. Carrefour'}
-          maxLength={60}
-        />
-        <div className={styles.group}>
-          <Text variant="label-medium" color="brand">
-            Catégorie
-          </Text>
-          {chips(line)}
-        </div>
+        </SheetAmount>
+        <SheetBlock title="Catégorie">{chips(line)}</SheetBlock>
+        <FormCard>
+          <TextRow
+            label="Libellé"
+            value={line.label}
+            onChange={(label) => update(line.key, { label })}
+            placeholder={category?.name ?? 'Ex : Carrefour, Uber…'}
+            maxLength={60}
+          />
+          <DateRow
+            label="Date"
+            value={date}
+            display={formatExpenseDate(date, today)}
+            onChange={setDate}
+            max={`${addMonths(monthOf(today), 12)}-01`}
+          />
+          <SelectRow<PaymentMethod | 'none'>
+            label="Paiement"
+            value={payment}
+            onChange={setPayment}
+            options={paymentOptions}
+          />
+        </FormCard>
       </Dialog>
     )
   }

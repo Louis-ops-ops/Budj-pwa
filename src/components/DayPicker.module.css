@@ -1,15 +1,25 @@
+/* Scrolls up to the edges of the sheet. */
 .row {
+  position: relative;
   display: flex;
   gap: var(--space-4);
+  margin: 0 calc(-1 * var(--layout-screen-margin));
+  padding: 0 var(--layout-screen-margin);
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
+  scroll-padding: 0 var(--layout-screen-margin);
+}
+
+.row::-webkit-scrollbar {
+  display: none;
 }
 
 .day {
   width: var(--layout-calendar-day);
   height: var(--layout-calendar-day);
   flex-shrink: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   color: var(--text-primary);
 }
 

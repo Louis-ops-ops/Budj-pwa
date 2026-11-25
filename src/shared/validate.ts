@@ -1,4 +1,10 @@
-import { CATEGORY_COLORS, PAYMENT_METHODS, type BudjData } from './types'
+import {
+  AVATAR_COLORS,
+  CATEGORY_COLORS,
+  PAYMENT_METHODS,
+  UI_STYLES,
+  type BudjData
+} from './types'
 
 const DAY = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
 const MONTH = /^\d{4}-(0[1-9]|1[0-2])$/
@@ -60,6 +66,34 @@ export function hasBudjStructure(value: unknown): boolean {
   )
 }
 
+const isBool = (v: unknown): v is boolean => typeof v === 'boolean'
+const TIME = /^([01]\d|2[0-3]):[0-5]\d$/
+
+/** v3 settings block. */
+export function isSettings(value: unknown): boolean {
+  if (!isObj(value)) return false
+  const r = value.reminders
+  return (
+    UI_STYLES.includes(value.uiStyle as never) &&
+    isStr(value.firstName) &&
+    AVATAR_COLORS.includes(value.avatarColor as never) &&
+    Number.isInteger(value.monthStartDay) &&
+    (value.monthStartDay as number) >= 1 &&
+    (value.monthStartDay as number) <= 28 &&
+    isBool(value.rolloverRemaining) &&
+    isBool(value.showCents) &&
+    value.currency === 'EUR' &&
+    isObj(r) &&
+    isBool(r.evening) &&
+    isStr(r.eveningTime) &&
+    TIME.test(r.eveningTime) &&
+    isBool(r.chargeEve) &&
+    isBool(r.budgetAlert80) &&
+    (value.onboardingCompletedAt === undefined || isStr(value.onboardingCompletedAt)) &&
+    isStr(value.createdAt)
+  )
+}
+
 const LISTS = [
   'budgetHistory',
   'categories',
@@ -68,8 +102,19 @@ const LISTS = [
   'expenses'
 ] as const
 
-/** Validation of current data: structure, schema version and updatedAt on every entity. */
-export function isBudjData(value: unknown): value is BudjData {
+/** v2: v1 structure plus updatedAt on every entity. */
+export function isBudjDataV2(value: unknown): boolean {
   if (!isObj(value) || value.schemaVersion !== 2 || !hasBudjStructure(value)) return false
   return LISTS.every((list) => isArrayOf(value[list], (item) => isStr(item.updatedAt)))
+}
+
+/** Validation of current data (v3): v2 plus settings, savings goals and category order. */
+export function isBudjData(value: unknown): value is BudjData {
+  if (!isObj(value) || value.schemaVersion !== 3 || !hasBudjStructure(value)) return false
+  return (
+    LISTS.every((list) => isArrayOf(value[list], (item) => isStr(item.updatedAt))) &&
+    isSettings(value.settings) &&
+    isArrayOf(value.budgetHistory, (p) => isCents(p.savingsGoal) && (p.savingsGoal as number) >= 0) &&
+    isArrayOf(value.categories, (c) => Number.isInteger(c.order))
+  )
 }

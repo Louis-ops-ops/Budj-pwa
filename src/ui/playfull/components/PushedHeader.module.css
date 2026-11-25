@@ -1,0 +1,20 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacer {
+  width: var(--layout-chip);
+  height: var(--layout-chip);
+  flex-shrink: 0;
+}

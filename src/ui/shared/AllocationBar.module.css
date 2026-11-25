@@ -1,0 +1,17 @@
+.bar {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+  height: var(--layout-gauge);
+  border-radius: var(--radius-full);
+  background: var(--bg-brand-strong);
+  overflow: hidden;
+}
+
+.segment {
+  flex-grow: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  height: 100%;
+  border-radius: var(--radius-xs);
+}

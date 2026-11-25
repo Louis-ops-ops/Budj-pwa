@@ -6,7 +6,6 @@ import {
   formatDayMonth,
   formatMonthName,
   formatRelative,
-  makeDay,
   monthOf
 } from '../data/dates'
 import { initialOf } from '../data/format'
@@ -83,10 +82,18 @@ export function FixedCalendarMobile({
   const marked = new Map([...byDay].map(([d, list]) => [d, list.length]))
   const ofDay = byDay.get(selectedDay) ?? []
   const groups = sel.fixedGroups(data, month)
+  const navigate = useNavigate()
 
   return (
     <MobilePage>
       <header className={styles.header}>
+        <div className={styles.headerRow}>
+          <IconButton icon="chevron" iconRotate={180} label="Retour" onClick={() => navigate('/fixes')} />
+          <Text variant="h2" as="span">
+            Calendrier du mois
+          </Text>
+          <span aria-hidden="true" />
+        </div>
         <Text variant="h1" as="h1">
           Mes dépenses fixes
         </Text>
@@ -158,7 +165,7 @@ export function FixedCalendarMobile({
                   return (
                     <FixedRow
                       key={f.id}
-                      status={sel.isFixedPaid(f, month, today) ? 'paid' : 'upcoming'}
+                      status={sel.isFixedPaid(data, f, month, today) ? 'paid' : 'upcoming'}
                       name={f.label}
                       day={`Le ${day === 1 ? '1er' : day}`}
                       monthly={formatEuro(f.amount)}
@@ -203,7 +210,11 @@ export function FixedListMobile({
   return (
     <MobilePage>
       <header className={styles.headerRow}>
-        <IconButton icon="chevron" iconRotate={180} label="Retour" onClick={() => navigate('/')} />
+        <IconButton
+          icon="calendar"
+          label="Calendrier du mois"
+          onClick={() => navigate('/fixes/calendrier')}
+        />
         <Text variant="h2" as="h1">
           Dépenses fixes
         </Text>
@@ -261,6 +272,12 @@ export function FixedListMobile({
         </div>
       </section>
 
+      <WeekCard
+        days={sel.weekCharges(data, today)}
+        today={today}
+        onMonth={() => navigate('/fixes/calendrier')}
+      />
+
       {next && (
         <div className={styles.nextCharge}>
           <Text variant="label-medium" color="brand" as="h2">
@@ -279,27 +296,28 @@ export function FixedListMobile({
       {groups.map((g) => (
         <section key={g.subcategory.id} className={styles.group}>
           <div className={styles.spread}>
-            <Text variant="h2" as="h2">
-              {g.subcategory.name}
-            </Text>
+            <span className={styles.groupTitle}>
+              <Text variant="h2" as="h2">
+                {g.subcategory.name}
+              </Text>
+              <Text variant="label-regular" color="secondary" as="span">
+                {plural(g.items.length, 'prélèvement', 'prélèvements')}
+              </Text>
+            </span>
             <Text variant="body-regular" color="brand-faint" as="span" tabular>
               {formatEuro(g.total)}
             </Text>
           </div>
           <div className={styles.groupList}>
             {g.items.map((f) => {
-              const paid = sel.isFixedPaid(f, month, today)
+              const paid = sel.isFixedPaid(data, f, month, today)
               const day = sel.chargeDay(f, month)
               return (
                 <FixedItem
                   key={f.id}
                   fixed={f}
                   muted={paid}
-                  caption={
-                    paid
-                      ? `Prélevé le ${day}`
-                      : `Le ${formatDayMonth(makeDay(month, day))} · à venir`
-                  }
+                  caption={`Le ${day === 1 ? '1er' : day} du mois · ${paid ? 'Prélevé' : 'À venir'}`}
                 />
               )
             })}
@@ -316,5 +334,50 @@ export function FixedListMobile({
         />
       )}
     </MobilePage>
+  )
+}
+
+const WEEKDAYS = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+
+/** v3 §7.6: « Cette semaine », 7 days with a dot per charge, link to the month calendar. */
+export function WeekCard({
+  days,
+  today,
+  onMonth
+}: {
+  days: sel.WeekDay[]
+  today: string
+  onMonth(): void
+}): React.JSX.Element {
+  const count = days.reduce((a, d) => a + d.charges.length, 0)
+  return (
+    <section className={styles.weekCard} aria-label="Cette semaine">
+      <div className={styles.spread}>
+        <Text variant="h3" as="h2">
+          Cette semaine
+        </Text>
+        <TextLink label="Mois entier" icon="chevron" iconPosition="right" onClick={onMonth} />
+      </div>
+      <ol className={styles.week} aria-label={`${count} prélèvement${count > 1 ? 's' : ''} cette semaine`}>
+        {days.map((d, i) => (
+          <li
+            key={d.date}
+            className={styles.weekDay}
+            data-today={d.date === today}
+            aria-label={`${formatDayMonth(d.date)} : ${
+              d.charges.length === 0 ? 'aucun prélèvement' : d.charges.map((f) => f.label).join(', ')
+            }`}
+          >
+            <span className="t-caption-medium">{WEEKDAYS[i]}</span>
+            <span className={`t-label-medium tabular ${styles.weekNumber}`}>{Number(d.date.slice(8, 10))}</span>
+            <span className={styles.weekDots} aria-hidden="true">
+              {d.charges.slice(0, 3).map((f) => (
+                <span key={f.id} className={styles.weekDot} />
+              ))}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
   )
 }

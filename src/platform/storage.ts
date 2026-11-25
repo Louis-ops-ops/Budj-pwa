@@ -16,6 +16,10 @@ export interface BudjPlatform {
   /** Takes the data so the file leaves in the same tick as the click (iOS share sheet). */
   exportData(data: BudjData): Promise<{ ok: boolean; filename?: string }>
   importData(): Promise<BudjData | null>
+  /** Delivers any file through the share sheet or a download (CSV export). */
+  exportFile(file: File): Promise<boolean>
+  /** Copies data into data-bak right away (before a reset). */
+  backupNow(data: BudjData): Promise<void>
   getTheme(): Promise<ThemeSetting>
   setTheme(theme: ThemeSetting): Promise<void>
   getStorageStatus(): Promise<StorageStatus>
@@ -23,6 +27,8 @@ export interface BudjPlatform {
   /** True when no export for 30 days and the reminder was not hidden in that time. */
   getExportReminder(): Promise<boolean>
   dismissExportReminder(): Promise<void>
+  getSeenReminders(): Promise<Record<string, string>>
+  markReminderSeen(kind: string, day: string): Promise<void>
   /** True when the last loadData() fell back on data-bak. */
   restoredFromBackup(): boolean
   /** Calls back when another tab or window saved. Returns the unsubscribe function. */
@@ -41,6 +47,8 @@ interface Meta {
   lastBackupAt?: string
   lastExportAt?: string
   exportReminderHiddenAt?: string
+  /** Last day each in-app reminder was shown (v3 §5.3). */
+  lastSeenReminders?: Record<string, string>
 }
 
 const DB_NAME = 'budj'
@@ -228,6 +236,17 @@ export function createPlatform(pickFile = pickJsonFile, deliverFile = deliverBac
       return data
     },
 
+    async exportFile(file) {
+      const ok = await deliverFile(file)
+      if (ok) await updateMeta({ lastExportAt: new Date().toISOString() })
+      return ok
+    },
+
+    async backupNow(data) {
+      await write('data-bak', data)
+      await updateMeta({ lastBackupAt: new Date().toISOString() })
+    },
+
     async getTheme() {
       const db = await open()
       const settings = await db.get(STORE, 'settings')
@@ -266,6 +285,18 @@ export function createPlatform(pickFile = pickJsonFile, deliverFile = deliverBac
 
     async dismissExportReminder() {
       await updateMeta({ exportReminderHiddenAt: new Date().toISOString() })
+    },
+
+    async getSeenReminders() {
+      const db = await open()
+      const meta: Meta | undefined = await db.get(STORE, 'meta')
+      return meta?.lastSeenReminders ?? {}
+    },
+
+    async markReminderSeen(kind, day) {
+      const db = await open()
+      const meta: Meta | undefined = await db.get(STORE, 'meta')
+      await updateMeta({ lastSeenReminders: { ...meta?.lastSeenReminders, [kind]: day } })
     },
 
     restoredFromBackup: () => restored,

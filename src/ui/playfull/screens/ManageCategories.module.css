@@ -1,0 +1,65 @@
+.allocation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+/* Figma: Carte catégorie, état Suppression (365:375) */
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: 0 var(--space-4) 0 var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  color: var(--card-fg);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-16) 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-control);
+  height: var(--layout-control);
+  color: var(--icon-danger);
+  touch-action: manipulation;
+}
+
+.delete:active {
+  opacity: var(--pressed-opacity);
+}
+
+.reorder {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.full {
+  width: 100%;
+}

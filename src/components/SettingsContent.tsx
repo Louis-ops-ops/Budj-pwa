@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import type { ThemeSetting } from '../shared/types'
+import type { ThemeSetting, UiStyle } from '../shared/types'
+import { useBudj } from '../data/store'
 import { formatBytes } from '../data/format'
 import { exportBackup, importBackup } from '../platform/backup'
 import { platform, type StorageStatus } from '../platform/storage'
-import { changeTheme, resolveTheme } from '../platform/theme'
+import { changeTheme, getThemeSetting } from '../platform/theme'
 import { Button } from './Button'
 import { ExportReminder } from './ExportReminder'
 import { SelectField } from './Field'
@@ -12,8 +13,14 @@ import { Text } from './Text'
 import styles from './SettingsContent.module.css'
 
 const THEMES: { value: ThemeSetting; label: string }[] = [
+  { value: 'system', label: 'Système' },
   { value: 'light', label: 'Clair' },
   { value: 'dark', label: 'Sombre' }
+]
+
+const UI_STYLES: { value: UiStyle; label: string }[] = [
+  { value: 'playfull', label: 'Playfull' },
+  { value: 'pro', label: 'Pro' }
 ]
 
 function StatusRow({ label, value }: { label: string; value: string }): React.JSX.Element {
@@ -31,12 +38,14 @@ function StatusRow({ label, value }: { label: string; value: string }): React.JS
 
 /** Shared by the desktop dialog and the mobile Réglages tab. */
 export function SettingsContent(): React.JSX.Element {
-  const [theme, setTheme] = useState<ThemeSetting>('light')
+  const [theme, setTheme] = useState<ThemeSetting>(getThemeSetting)
+  const uiStyle = useBudj((s) => s.data.settings.uiStyle)
+  const updateSettings = useBudj((s) => s.updateSettings)
   const [status, setStatus] = useState<StorageStatus | null>(null)
   const [exports, setExports] = useState(0)
 
   useEffect(() => {
-    void platform.getTheme().then((t) => setTheme(resolveTheme(t)))
+    void platform.getTheme().then(setTheme)
     void platform.getStorageStatus().then(setStatus)
   }, [])
 
@@ -51,7 +60,20 @@ export function SettingsContent(): React.JSX.Element {
 
   return (
     <div className={styles.content}>
-      <SelectField label="Thème" value={theme} options={THEMES} onChange={selectTheme} />
+      <SelectField
+        label="Style d’UI"
+        value={uiStyle}
+        options={UI_STYLES}
+        onChange={(value) => updateSettings({ uiStyle: value })}
+      />
+      <SelectField
+        label="Thème"
+        value={uiStyle === 'pro' ? 'dark' : theme}
+        options={THEMES}
+        onChange={selectTheme}
+        disabled={uiStyle === 'pro'}
+        hint={uiStyle === 'pro' ? 'Le style Pro est toujours en sombre.' : undefined}
+      />
 
       <InstallHelp />
 

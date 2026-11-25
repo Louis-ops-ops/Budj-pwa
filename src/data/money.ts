@@ -13,8 +13,16 @@ const plainNumber = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 })
 
 const typographicMinus = (s: string): string => s.replace('-', MINUS)
 
-/** "24,78 €" */
+// Réglages › Afficher les centimes (v3 §5.1). Display only: amounts stay in cents.
+let showCents = true
+
+export function setShowCents(value: boolean): void {
+  showCents = value
+}
+
+/** "24,78 €" ("25 €" when cents are hidden). */
 export function formatEuro(cents: number): string {
+  if (!showCents) return typographicMinus(noDecimals.format(Math.round(cents / 100)))
   return typographicMinus(withDecimals.format(cents / 100))
 }
 

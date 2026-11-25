@@ -2,6 +2,7 @@
 .overlay {
   position: fixed;
   inset: 0;
+  z-index: var(--z-sheet);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +132,7 @@
     animation: sheetIn var(--motion-sheet-in) var(--ease-smooth);
     padding: var(--space-12) var(--layout-screen-margin)
       max(var(--safe-bottom), var(--space-32));
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
     overscroll-behavior-y: contain;
   }
 
@@ -151,13 +152,15 @@
     width: var(--layout-sheet-handle-width);
     height: var(--layout-sheet-handle-height);
     border-radius: var(--radius-full);
-    background: var(--bg-brand-strong);
+    background: var(--bg-surface);
   }
 
+  /* Full sheet width, so rows of chips scroll up to its edges. */
   .body {
     flex: 1 1 auto;
-    margin: calc(-1 * var(--space-4));
-    padding: var(--space-4);
+    margin: calc(-1 * var(--space-4)) calc(-1 * var(--layout-screen-margin));
+    padding: var(--space-4) var(--layout-screen-margin);
+    overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior-y: contain;
   }
@@ -190,29 +193,45 @@
   }
 
   .footerButtons > * {
-    flex: 1;
+    flex: none;
+    width: 100%;
   }
 
-  /* Closing goes through the cross, the overlay or a drag. */
+  /* Forms close through the cross, the overlay or a drag; confirmations
+     also show « Annuler » under the primary button. */
+  .footerButtons {
+    flex-direction: column-reverse;
+  }
+
   .footerButtons > :first-child:not(:last-child) {
     display: none;
+  }
+
+  .dialog[data-cancel] .footerButtons > :first-child {
+    display: flex;
+    background: transparent;
   }
 }
 
 @media (max-width: 1023px) {
-  /* Not in the sheet design, kept for VoiceOver. */
-  .close {
-    position: absolute;
-    width: var(--layout-border);
-    height: var(--layout-border);
-    overflow: hidden;
-    clip-path: inset(50%);
+  /* Pro/En-tête sheet: title H2, round close button. */
+  .title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* IconButton: 32 px visual in a 44 px touch area */
+  .close > span {
+    border-color: transparent;
+    background: var(--bg-surface);
+    color: var(--icon-muted);
   }
 
   .footer {
     flex-direction: column-reverse;
     align-items: center;
-    padding-top: var(--space-8);
+    gap: var(--space-12);
   }
 
   .footerButtons {

@@ -11,13 +11,13 @@ import {
 } from '../data/money'
 import * as sel from '../data/selectors'
 import { useBudj } from '../data/store'
-import { EmptyState } from '../components/EmptyState'
 import { Gauge } from '../components/Gauge'
 import { IconButton } from '../components/IconButton'
-import { SavingsChart } from '../components/SavingsChart'
+import { GhostChart, SavingsChart } from '../components/SavingsChart'
 import { Text } from '../components/Text'
 import { TrendBadge } from '../components/TrendBadge'
 import { MobilePage } from '../layout/Page'
+import { SavingsGoalCard } from '../ui/playfull/components/HomeCards'
 import styles from './Mobile.module.css'
 
 const CHART_MONTHS = 6
@@ -31,12 +31,15 @@ export function EvolutionMobile(): React.JSX.Element {
   const series = sel.savingsSeries(data, today).slice(-CHART_MONTHS)
   const [current, ...past] = sel.monthRows(data, today)
   const [picked, setPicked] = useState<string | null>(null)
+  const currentRemaining = current ? sel.globalRemaining(data, current.month) : 0
   const selected = series.find((m) => m.month === picked) ?? series[series.length - 1]
 
   const prev = selected && addMonths(selected.month, -1)
   const previous = series.find((m) => m.month === prev)
   const delta = selected && previous ? selected.savings - previous.savings : null
   const total = series.reduce((a, m) => a + m.savings, 0)
+  const hits = sel.goalHitCount(data, today, CHART_MONTHS)
+  const goalNow = sel.savingsGoal(data, sel.currentMonth(data, today))
 
   return (
     <MobilePage>
@@ -96,17 +99,27 @@ export function EvolutionMobile(): React.JSX.Element {
               </Text>
             </div>
             <SavingsChart
-              months={series.map((m) => ({ month: m.month, value: m.savings }))}
+              months={series.map((m) => ({
+                month: m.month,
+                value: m.savings,
+                goal: sel.savingsGoal(data, m.month)
+              }))}
               selected={selected.month}
               onSelect={setPicked}
+              goalLabel={`Objectif ${formatEuroShort(goalNow)} par mois · atteint ${hits.hit} mois sur ${hits.total}`}
             />
           </section>
         </>
       ) : (
-        <EmptyState
-          title="Pas encore de bilan"
-          message="Ton premier bilan arrivera à la fin de ce mois-ci."
-        />
+        <section className={styles.chartCard} aria-label="Ton évolution arrive bientôt">
+          <GhostChart />
+          <Text variant="h3" as="p">
+            Ton évolution arrive bientôt
+          </Text>
+          <Text variant="label-regular" color="secondary" as="p">
+            Ton premier bilan apparaîtra à la fin de ce mois-ci, avec ton épargne et ton objectif.
+          </Text>
+        </section>
       )}
 
       <Text variant="h1" as="h2">
@@ -137,20 +150,20 @@ export function EvolutionMobile(): React.JSX.Element {
               <span className={styles.monthResult}>
                 <Text
                   variant="h1"
-                  color={current.savings < 0 ? 'danger' : 'primary'}
+                  color={currentRemaining < 0 ? 'danger' : 'primary'}
                   as="span"
                   tabular
                 >
-                  {formatEuroFloor(Math.abs(current.savings))}
+                  {formatEuroFloor(Math.abs(currentRemaining))}
                 </Text>
                 <Text variant="label-regular" color="tertiary" as="span">
-                  {current.savings < 0 ? 'de dépassement' : 'restants'}
+                  {currentRemaining < 0 ? 'de dépassement' : 'restants'}
                 </Text>
               </span>
             </span>
             <Gauge
               ratio={current.ratio}
-              fill={current.savings < 0 ? 'bg-danger' : 'bg-accent'}
+              fill={currentRemaining < 0 ? 'bg-danger' : 'bg-accent'}
               track="bg-brand-strong"
             />
           </button>
@@ -171,6 +184,9 @@ export function EvolutionMobile(): React.JSX.Element {
                   </Text>
                   <Text variant="label-regular" color="tertiary" as="span" tabular>
                     {formatEuroFloor(row.spent)} dépensés
+                    {sel.savingsGoal(data, row.month) > 0 && (
+                      <> · <GoalState state={sel.monthGoalState(data, row.month)} /></>
+                    )}
                   </Text>
                 </span>
                 <Text variant="h2" color={row.savings < 0 ? 'danger' : 'success'} as="span" tabular>
@@ -185,6 +201,21 @@ export function EvolutionMobile(): React.JSX.Element {
   )
 }
 
+const GOAL_STATE = {
+  reached: { label: 'objectif atteint', color: 'success' },
+  below: { label: 'sous l’objectif', color: 'secondary' },
+  missed: { label: 'objectif manqué', color: 'danger' }
+} as const
+
+/** « objectif atteint » / « sous l'objectif » / « objectif manqué » (v3 §7.8). */
+export function GoalState({ state }: { state: sel.MonthGoalState }): React.JSX.Element {
+  return (
+    <Text variant="label-regular" color={GOAL_STATE[state].color} as="span">
+      {GOAL_STATE[state].label}
+    </Text>
+  )
+}
+
 /** Figma: Évolution, Détail d'un mois (173:710). */
 export function MonthDetailMobile({ month }: { month: string }): React.JSX.Element {
   const data = useBudj((s) => s.data)
@@ -195,6 +226,8 @@ export function MonthDetailMobile({ month }: { month: string }): React.JSX.Eleme
   const budget = sel.monthBudget(data, month)
   const comparisons = sel.compareWithPreviousMonth(data, month)
   const ratio = budget > 0 ? spent / budget : 1
+  const goal = sel.savingsGoal(data, month)
+  const goalState = sel.monthGoalState(data, month)
 
   return (
     <MobilePage>
@@ -253,6 +286,24 @@ export function MonthDetailMobile({ month }: { month: string }): React.JSX.Eleme
           </Text>
         </div>
       </section>
+
+      {goal > 0 && (
+        <SavingsGoalCard
+          savings={{
+            goal,
+            expected: Math.max(0, savings),
+            status: goalState === 'reached' ? 'onTrack' : 'atRisk',
+            shortfall: Math.max(0, goal - savings)
+          }}
+          detail={
+            goalState === 'reached'
+              ? 'Objectif atteint ce mois-là'
+              : goalState === 'below'
+                ? `Sous l’objectif de ${formatEuroFloor(goal - savings)}`
+                : 'Objectif manqué : budget dépassé'
+          }
+        />
+      )}
 
       <div className={styles.header}>
         <Text variant="h2" as="h2">

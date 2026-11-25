@@ -1,17 +1,23 @@
 import { create } from 'zustand'
 import type {
+  AvatarColor,
   BudjData,
   Category,
   Expense,
   FixedExpense,
-  FixedSubcategory
+  FixedSubcategory,
+  Settings
 } from '../shared/types'
 import { platform, StorageCorruptError } from '../platform/storage'
 import { useUi } from '../ui/uiStore'
 import * as m from './mutations'
-import { monthOf, todayISO } from './dates'
+import { todayISO } from './dates'
+import { currentMonth } from './selectors'
+import { crossedBudgetAlert } from './reminders'
 
 export type StorageIssue = 'unavailable' | 'corrupt'
+
+export type NewCategory = Omit<Category, 'id' | 'order' | 'createdAt' | 'updatedAt'>
 
 interface BudjState {
   data: BudjData
@@ -21,16 +27,24 @@ interface BudjState {
   replaceData(data: BudjData): void
   startFresh(): void
   completeOnboarding(input: {
+    firstName: string
+    avatarColor?: AvatarColor
     monthlyBudget: number
-    fixedExpenses: Omit<FixedExpense, 'id' | 'startMonth' | 'subcategoryId' | 'updatedAt'>[]
-    categories: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>[]
+    savingsGoal: number
+    fixedExpenses?: Omit<FixedExpense, 'id' | 'startMonth' | 'subcategoryId' | 'updatedAt'>[]
+    categories: NewCategory[]
   }): void
   setMonthlyBudget(amount: number): void
+  setSavingsGoal(amount: number): void
+  updateSettings(patch: Partial<Settings>): void
+  reorderCategories(ids: string[]): void
+  /** Réglages › Réinitialiser: empties the data (data-bak is kept), back to the onboarding. */
+  resetApp(): void
   addExpenses(expenses: Omit<Expense, 'id' | 'updatedAt'>[]): void
   updateExpense(expense: Expense): void
   deleteExpenses(ids: string[]): void
   moveExpenses(ids: string[], categoryId: string | null): void
-  addCategory(category: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>): Category
+  addCategory(category: NewCategory): Category
   updateCategory(category: Category): void
   deleteCategory(id: string): void
   addFixedExpense(fixed: Omit<FixedExpense, 'id' | 'startMonth' | 'updatedAt'>): void
@@ -79,11 +93,26 @@ export const useBudj = create<BudjState>()((set, get) => {
       set({ data: m.emptyData(), storageIssue: null })
     },
 
-    completeOnboarding({ monthlyBudget, fixedExpenses, categories }) {
+    completeOnboarding({
+      firstName,
+      avatarColor,
+      monthlyBudget,
+      savingsGoal,
+      fixedExpenses = [],
+      categories
+    }) {
       void platform.requestPersistence()
       const today = todayISO()
-      const month = monthOf(today)
+      const previous = get().data.settings
       const updatedAt = nowISO()
+      const settings: Settings = {
+        ...previous,
+        firstName: firstName.trim(),
+        avatarColor: avatarColor ?? previous.avatarColor,
+        onboardingCompletedAt: updatedAt,
+        createdAt: updatedAt
+      }
+      const month = currentMonth({ ...get().data, settings }, today)
       const subcategories = m.DEFAULT_FIXED_SUBCATEGORIES.map((name) => ({
         id: newId(),
         name,
@@ -93,9 +122,10 @@ export const useBudj = create<BudjState>()((set, get) => {
       const bills = subcategories[1].id
       set({
         data: {
-          schemaVersion: 2,
+          schemaVersion: 3,
           onboardingDone: true,
-          budgetHistory: [{ fromMonth: month, amount: monthlyBudget, updatedAt }],
+          settings,
+          budgetHistory: [{ fromMonth: month, amount: monthlyBudget, savingsGoal, updatedAt }],
           fixedSubcategories: subcategories,
           fixedExpenses: fixedExpenses.map((f) => ({
             ...f,
@@ -104,23 +134,54 @@ export const useBudj = create<BudjState>()((set, get) => {
             startMonth: month,
             updatedAt
           })),
-          categories: categories.map((c) => ({ ...c, id: newId(), createdAt: today, updatedAt })),
+          categories: categories.map((c, order) => ({
+            ...c,
+            id: newId(),
+            order,
+            createdAt: today,
+            updatedAt
+          })),
           expenses: []
         }
       })
     },
 
     setMonthlyBudget(amount) {
-      apply((d) => m.setMonthlyBudget(d, amount, monthOf(todayISO())))
+      apply((d) => m.setMonthlyBudget(d, amount, currentMonth(d, todayISO())))
+    },
+
+    setSavingsGoal(amount) {
+      apply((d) => m.setSavingsGoal(d, amount, currentMonth(d, todayISO())))
+    },
+
+    updateSettings(patch) {
+      apply((d) => m.updateSettings(d, patch))
+    },
+
+    reorderCategories(ids) {
+      apply((d) => m.reorderCategories(d, ids))
+    },
+
+    resetApp() {
+      // Keeps the display preferences: the onboarding starts again in the same style.
+      const { uiStyle } = get().data.settings
+      const empty = m.emptyData()
+      set({ data: { ...empty, settings: { ...empty.settings, uiStyle } } })
     },
 
     addExpenses(expenses) {
+      const before = get().data
       apply((d) =>
         m.addExpenses(
           d,
           expenses.map((e) => ({ ...e, id: newId(), updatedAt: nowISO() }))
         )
       )
+      // v3 §7.13: « Courses : 80 % du budget atteint » when a category crosses 80 %.
+      const month = currentMonth(before, todayISO())
+      for (const message of crossedBudgetAlert(before, get().data, month)) {
+        useUi.getState().toast(message)
+      }
     },
 
     updateExpense(expense) {
@@ -139,6 +200,7 @@ export const useBudj = create<BudjState>()((set, get) => {
       const category: Category = {
         ...input,
         id: newId(),
+        order: m.nextCategoryOrder(get().data),
         createdAt: todayISO(),
         updatedAt: nowISO()
       }
@@ -158,18 +220,18 @@ export const useBudj = create<BudjState>()((set, get) => {
       const fixed: FixedExpense = {
         ...input,
         id: newId(),
-        startMonth: monthOf(todayISO()),
+        startMonth: currentMonth(get().data, todayISO()),
         updatedAt: nowISO()
       }
       apply((d) => m.addFixedExpense(d, fixed))
     },
 
     updateFixedExpense(fixed) {
-      apply((d) => m.editFixedExpense(d, fixed, monthOf(todayISO()), newId()))
+      apply((d) => m.editFixedExpense(d, fixed, currentMonth(d, todayISO()), newId()))
     },
 
     deleteFixedExpense(id) {
-      apply((d) => m.deleteFixedExpense(d, id, monthOf(todayISO())))
+      apply((d) => m.deleteFixedExpense(d, id, currentMonth(d, todayISO())))
     },
 
     addFixedSubcategory(name) {

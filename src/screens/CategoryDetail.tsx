@@ -13,6 +13,7 @@ import {
   formatMonthShort,
   makeDay,
   monthOf,
+  addMonths,
   todayISO
 } from '../data/dates'
 import { AsideColumn, Card, MainColumn, MobilePage, Page, Section } from '../layout/Page'
@@ -30,6 +31,7 @@ import { MonthPicker } from '../components/MonthPicker'
 import { Text } from '../components/Text'
 import { TextLink } from '../components/TextLink'
 import { categoryPaint } from '../data/colors'
+import { RoundAction, RoundActions } from '../ui/shared/RoundAction'
 import styles from './CategoryDetail.module.css'
 
 const plural = (n: number, one: string, many: string): string => `${n} ${n > 1 ? many : one}`
@@ -75,6 +77,14 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
   const lastDay = makeDay(month, daysInMonth(month))
   const paint = categoryPaint(category)
   const fg = paint.fg
+
+  const setChromeHidden = useUi((s) => s.setChromeHidden)
+  // Mobile selection mode: the bottom panel replaces the tab bar (v3 §7.5).
+  useEffect(() => {
+    setChromeHidden(isMobile && selecting)
+    return () => setChromeHidden(false)
+  }, [isMobile, selecting, setChromeHidden])
+  const catStats = sel.categoryStats(data, category, month, today)
 
   const exitSelection = (): void => {
     setSelecting(false)
@@ -324,15 +334,24 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
   if (isMobile) {
     return (
       <MobilePage>
-        <header className={mobile.headerRow}>
-          <IconButton
-            icon="chevron"
-            iconRotate={180}
-            label="Mes catégories"
-            onClick={() => navigate('/')}
-          />
-          <IconButton icon="edit" label="Modifier la catégorie" onClick={openCategoryActions} />
-        </header>
+        {selecting ? (
+          <header className={mobile.headerRow}>
+            <Text variant="h3" as="p" aria-live="polite">
+              {plural(selected.size, 'sélectionnée', 'sélectionnées')}
+            </Text>
+            <TextLink label="Annuler" onClick={exitSelection} />
+          </header>
+        ) : (
+          <header className={mobile.headerRow}>
+            <IconButton
+              icon="chevron"
+              iconRotate={180}
+              label="Retour"
+              onClick={() => navigate(-1)}
+            />
+            <IconButton icon="edit" label="Modifier la catégorie" onClick={openCategoryActions} />
+          </header>
+        )}
 
         <section className={mobile.hero} style={heroStyle} aria-label="Restant de la catégorie">
           <div className={mobile.headerRow}>
@@ -380,13 +399,58 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
           )}
         </section>
 
-        <div className={mobile.stats}>
-          <MobileStat label="Dépensé" value={formatEuroFloor(status.spent)} />
-          <MobileStat label="Dépenses" value={String(stats.count)} />
-          <MobileStat label="Moyenne" value={formatEuroFloor(stats.average)} />
-        </div>
+        {!selecting && (
+          <RoundActions>
+            <RoundAction
+              icon="add"
+              label="Ajouter"
+              onClick={() => openDialog({ kind: 'expense', categoryId: category.id })}
+            />
+            <RoundAction
+              icon="budget"
+              label="Budget"
+              onClick={() => openDialog({ kind: 'categoryBudget', categoryId: category.id })}
+            />
+            <RoundAction icon="move" label="Déplacer" onClick={() => setSelecting(true)} />
+            <RoundAction
+              icon="delete"
+              label="Supprimer"
+              tone="danger"
+              onClick={() =>
+                openDialog({
+                  kind: 'deleteCategory',
+                  categoryId: category.id,
+                  onDeleted: () => navigate('/')
+                })
+              }
+            />
+          </RoundActions>
+        )}
+
+        <section className={mobile.statsCard} aria-label="Statistiques">
+          <MobileStat label="Par jour" value={formatEuroFloor(catStats.perDay)} />
+          <MobileStat label="Jours restants" value={String(catStats.daysLeft)} />
+          <MobileStat
+            label={`vs ${formatMonthName(addMonths(month, -1))}`}
+            value={
+              catStats.deltaVsPrevious === null
+                ? '—'
+                : `${catStats.deltaVsPrevious > 0 ? '+' : catStats.deltaVsPrevious < 0 ? '−' : ''}${Math.abs(catStats.deltaVsPrevious)} %`
+            }
+            tone={
+              catStats.deltaVsPrevious === null
+                ? undefined
+                : catStats.deltaVsPrevious < 0
+                  ? 'success'
+                  : catStats.deltaVsPrevious > 0
+                    ? 'danger'
+                    : undefined
+            }
+          />
+        </section>
 
         {expenseSection}
+        {selecting && <div className={mobile.panelSpace} aria-hidden="true" />}
 
         {shown.length < expenses.length && (
           <TextLink
@@ -556,13 +620,21 @@ function CategoryDetailContent({ category }: { category: Category }): React.JSX.
   )
 }
 
-function MobileStat({ label, value }: { label: string; value: string }): React.JSX.Element {
+function MobileStat({
+  label,
+  value,
+  tone
+}: {
+  label: string
+  value: string
+  tone?: 'success' | 'danger'
+}): React.JSX.Element {
   return (
     <div className={mobile.stat}>
       <Text variant="label-regular" color="secondary" as="span">
         {label}
       </Text>
-      <Text variant="h3" as="span" tabular>
+      <Text variant="h3" as="span" tabular color={tone}>
         {value}
       </Text>
     </div>

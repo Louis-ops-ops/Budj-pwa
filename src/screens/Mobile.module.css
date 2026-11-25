@@ -451,3 +451,88 @@
   gap: var(--space-8);
   padding: var(--space-4) 0;
 }
+
+/* v3 §7.5: the three statistics in a single card */
+.statsCard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.statsCard > .stat {
+  background: transparent;
+}
+
+.statsCard > .stat + .stat {
+  border-left: var(--layout-border) solid var(--bg-brand-strong);
+}
+
+.panelSpace {
+  height: calc(var(--layout-selection-bar) + var(--space-24));
+}
+
+.groupTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+
+/* v3 §7.6: « Cette semaine » */
+.weekCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-16) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--bg-brand-subtle);
+}
+
+.week {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weekDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: var(--layout-calendar-day);
+  padding: var(--space-6) 0;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.weekNumber {
+  color: var(--text-primary);
+}
+
+.weekDay[data-today='true'] {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+}
+
+.weekDay[data-today='true'] .weekNumber {
+  color: var(--text-on-accent);
+}
+
+.weekDots {
+  display: flex;
+  gap: var(--space-2);
+  height: var(--layout-calendar-dot);
+}
+
+.weekDot {
+  width: var(--layout-calendar-dot);
+  height: var(--layout-calendar-dot);
+  border-radius: var(--radius-full);
+  background: var(--text-brand);
+}
+
+.weekDay[data-today='true'] .weekDot {
+  background: var(--text-on-accent);
+}

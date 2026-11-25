@@ -1,0 +1,41 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-12);
+  width: 100%;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  width: var(--layout-round-action);
+  touch-action: manipulation;
+}
+
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--layout-round-circle);
+  height: var(--layout-round-circle);
+  border-radius: var(--radius-full);
+  background: var(--bg-icon-button);
+  color: var(--icon-primary);
+  transition: opacity var(--motion-fast);
+}
+
+.action:active .circle {
+  opacity: var(--pressed-opacity);
+}
+
+.action[data-tone='danger'] .circle {
+  color: var(--icon-danger);
+}
+
+.label {
+  color: var(--text-primary);
+  white-space: nowrap;
+}

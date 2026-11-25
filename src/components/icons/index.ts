@@ -12,6 +12,7 @@ import { TrendUpIcon } from './TrendUp'
 import { TrendDownIcon } from './TrendDown'
 import { ShareIcon } from './Share'
 import { SettingsIcon } from './Settings'
+import { BudgetIcon, CheckIcon, MoreIcon, ProfileIcon } from './V3'
 
 export const icons = {
   add: AddIcon,
@@ -27,7 +28,11 @@ export const icons = {
   trendUp: TrendUpIcon,
   trendDown: TrendDownIcon,
   share: ShareIcon,
-  settings: SettingsIcon
+  settings: SettingsIcon,
+  budget: BudgetIcon,
+  more: MoreIcon,
+  profile: ProfileIcon,
+  check: CheckIcon
 }
 
 export type IconName = keyof typeof icons

@@ -30,6 +30,7 @@
 }
 
 .positive {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,6 +104,29 @@
   font-weight: var(--font-weight-bold);
 }
 
+/* Savings goal of the month, part of the chart (not drawn by hand as in Figma) */
+.goal {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: calc(var(--goal) * (var(--layout-chart-positive) - var(--line-height-label) - var(--space-4)));
+  border-top: var(--layout-border-strong) dashed var(--text-success);
+  pointer-events: none;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+  color: var(--text-secondary);
+}
+
+.legendLine {
+  width: var(--space-16);
+  border-top: var(--layout-border-strong) dashed var(--text-success);
+}
+
 /* Narrow chart (1280 px window): smaller value labels so they do not overlap. */
 @container (max-width: 640px) {
   .value {
@@ -133,4 +157,20 @@
     line-height: var(--line-height-label);
     color: var(--text-tertiary);
   }
+}
+
+.ghosts {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: var(--layout-chart-positive-mobile);
+  border-bottom: var(--layout-border) solid var(--border-brand-subtle);
+}
+
+.ghost {
+  width: var(--layout-chart-bar-mobile);
+  height: calc(var(--ratio) * 100%);
+  border: var(--layout-border-strong) dashed var(--border-brand-subtle);
+  border-bottom: none;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }

@@ -7,7 +7,7 @@ interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 
   /** Required: used as aria-label and tooltip. */
   label: string
   tone?: 'brand' | 'danger'
-  iconRotate?: 0 | 45 | 180
+  iconRotate?: 0 | 45 | 90 | 180 | 270
 }
 
 export function IconButton({
