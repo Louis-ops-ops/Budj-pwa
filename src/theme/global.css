@@ -19,8 +19,12 @@ body,
   height: 100%;
 }
 
+/* Pinned to the screen edges, not 100dvh: in the installed iOS app with a
+   black-translucent status bar, 100dvh is short by the status bar height,
+   which lifted the Playfull tab bar off the bottom. */
 #root {
-  height: 100dvh;
+  position: fixed;
+  inset: 0;
 }
 
 body {
