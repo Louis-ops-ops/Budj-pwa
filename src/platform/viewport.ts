@@ -1,7 +1,5 @@
-// Viewport measures shown in the Settings, to check the installed iOS app.
-// With a black-translucent status bar, iOS 26 sometimes gives the app a web
-// view shorter than the screen by the status bar height, and paints the rest
-// in black under it: nothing in the page can draw there.
+// Viewport measures for the Settings (temporary diagnostic of the installed
+// iOS app). The sizing itself is in global.css (:root[data-standalone]).
 import { isStandalone } from './install'
 
 // Window heights since the launch, to see when iOS changes it.

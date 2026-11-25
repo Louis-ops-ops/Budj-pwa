@@ -65,3 +65,8 @@
   background: var(--bg-surface);
   color: var(--text-primary);
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+:global(:root[data-standalone]) .container {
+  position: absolute;
+}

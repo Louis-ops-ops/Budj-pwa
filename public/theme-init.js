@@ -6,6 +6,10 @@ try {
   var ui = localStorage.getItem('budj-ui')
   var theme = localStorage.getItem('budj-theme')
   root.dataset.ui = ui === 'pro' ? 'pro' : 'playfull'
+  // Installed app: sized on the screen, not on the moving viewport (global.css).
+  if (navigator.standalone === true || matchMedia('(display-mode: standalone)').matches) {
+    root.dataset.standalone = ''
+  }
   if (theme === 'light' || theme === 'dark' || theme === 'system') root.dataset.theme = theme
   if (ui === 'pro') {
     root.dataset.theme = 'dark'

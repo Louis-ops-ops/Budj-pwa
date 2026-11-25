@@ -50,3 +50,8 @@
     align-items: center;
   }
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+:global(:root[data-standalone]) .host {
+  position: absolute;
+}

@@ -61,3 +61,8 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-12);
 }
+
+/* Installed app: hangs from the page (screen height), not the moving viewport (global.css). */
+:global(:root[data-standalone]) .panel {
+  position: absolute;
+}

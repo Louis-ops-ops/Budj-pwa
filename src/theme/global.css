@@ -19,8 +19,30 @@ body,
   height: 100%;
 }
 
+
 #root {
   height: 100dvh;
+}
+
+/* Installed app: iOS 26 makes the viewport swing between the small (848 pt,
+   as if the status bar took room) and the large height (896 pt, the screen)
+   while one navigates, and 100dvh and fixed elements follow it: the bottom
+   bars slid up and down. The page takes the large height, the screen, and
+   the bottom bars hang from it (position: absolute) instead of the viewport. */
+:root[data-standalone],
+:root[data-standalone] body {
+  height: 100lvh;
+  overflow: hidden;
+}
+
+:root[data-standalone] body {
+  position: relative;
+  /* Never scrollable, even by a focus: the screens scroll inside. */
+  overflow: clip;
+}
+
+:root[data-standalone] #root {
+  height: 100%;
 }
 
 body {
