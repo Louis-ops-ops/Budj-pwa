@@ -46,10 +46,7 @@
   .host {
     left: var(--space-16);
     right: var(--space-16);
-    bottom: calc(
-      max(var(--safe-bottom), var(--layout-screen-margin)) + var(--layout-control) * 2 -
-        var(--viewport-gap)
-    );
+    bottom: calc(max(var(--safe-bottom), var(--layout-screen-margin)) + var(--layout-control) * 2);
     align-items: center;
   }
 }

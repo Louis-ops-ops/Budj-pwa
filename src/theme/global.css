@@ -19,15 +19,8 @@ body,
   height: 100%;
 }
 
-/* Sized from the real screen (platform/viewport.ts): in the installed iOS app
-   with a black-translucent status bar, 100dvh and the fixed containing block
-   can be short by the status bar height. */
 #root {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: var(--app-height, 100dvh);
+  height: 100dvh;
 }
 
 body {
