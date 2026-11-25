@@ -1,3 +1,4 @@
+import { viewportReport } from '../platform/viewport'
 import { useEffect, useState } from 'react'
 import type { ThemeSetting, UiStyle } from '../shared/types'
 import { useBudj } from '../data/store'
@@ -140,6 +141,8 @@ export function SettingsContent(): React.JSX.Element {
 
       <Text variant="caption-medium" color="secondary">
         Budj version {__APP_VERSION__}
+        <br />
+        {viewportReport()}
       </Text>
     </div>
   )

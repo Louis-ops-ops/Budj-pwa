@@ -1,4 +1,5 @@
 // Logic of Réglages (v3 §7.10), shared by Playfull and Pro.
+import { viewportReport } from '../platform/viewport'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import type { ThemeSetting, UiStyle } from '../shared/types'
@@ -47,6 +48,7 @@ export function useSettings() {
     themeLabel: pro ? 'Sombre (Pro)' : THEME_LABELS[theme],
     styleLabel: STYLE_LABELS[settings.uiStyle],
     version: __APP_VERSION__,
+    viewport: viewportReport(),
     actions: {
       back: () => navigate(-1),
       setReminder: (patch: Partial<typeof reminders>) =>

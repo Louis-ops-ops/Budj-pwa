@@ -44,7 +44,7 @@
 .panel {
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: calc(-1 * var(--viewport-gap));
   left: 0;
   z-index: 10;
   display: flex;
