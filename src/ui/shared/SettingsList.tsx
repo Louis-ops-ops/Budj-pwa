@@ -97,7 +97,8 @@ export function SettingsList(): React.JSX.Element {
       <ListSection title="À propos">
         <ListGroup>
           <Row title="Version" trailing={s.version} />
-          <Row title="Écran (diagnostic)" subtitle={s.viewport} />
+          <Row title="Écran (diagnostic)" subtitle={s.viewport[0]} />
+          <Row title="Barre d’état (diagnostic)" subtitle={s.viewport[1]} />
           <Row
             title="Confidentialité"
             subtitle="Pas de compte, pas de serveur, aucune donnée envoyée."
